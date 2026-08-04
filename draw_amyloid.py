@@ -41,11 +41,11 @@ def draw_records(records_file_path: str, color: str, zorder: int):
     for i in range(len(points) - 1):
         if res_ids[i+1] - res_ids[i] == 1:
             plot.plot([xs[i], xs[i+1]], [ys[i], ys[i+1]], color=color,
-                      linewidth=4, zorder=zorder)
+                      linewidth=4, zorder=zorder, alpha=0.5)
 
 
-draw_records('all_amyloid_structures/2beg.pdb_records.txt', 'red', 0)
-draw_records('all_amyloid_structures/2mxu.pdb_records.txt', 'blue', 1)
+draw_records('all_amyloid_structures/2beg.pdb_records.txt', '#f4acb7', 0)
+draw_records('all_amyloid_structures/2mxu.pdb_records.txt', '#669bbc', 1)
 
 plot.xticks([])
 plot.yticks([])
