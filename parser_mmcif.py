@@ -76,7 +76,7 @@ for structure_file in list(folder.glob("*.cif")) + list(folder.glob("*.mmcif")):
 
         for _, mon_id in sequence_data:
             seq_res += get_amino_acid(mon_id)
-            
+
     # Get the complete sequence from _entity_poly_seq
     if entity_id is not None:
         seq_entity_ids = mmcif.get("_entity_poly_seq.entity_id", [])
@@ -134,9 +134,9 @@ for structure_file in list(folder.glob("*.cif")) + list(folder.glob("*.mmcif")):
         residue_number = residue.id[1]
 
         one_record = (
-            float(x),
-            float(y),
-            float(z),
+            round(float(x), 3),
+            round(float(y), 3),
+            round(float(z), 3),
             amino_acid,
             int(residue_number)
         )
