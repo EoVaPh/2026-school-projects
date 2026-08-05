@@ -1,3 +1,23 @@
 9a9x в sequences и records - пустой файл, так как, скорее всего, не ищется CA
 там есть некоторые файлы pdb и cif с одинаковыми названиями, если есть в названии расширение .pdb, то это pdb
-в pdb файле 8ZLI нет SEQRES, поэтому в sequences этого файла нет последовательности SEQRES
+
+в pdb следующих файлах нет SEQRES, поэтому в sequences этих файлов нет последовательности SEQRES, но все они дублируются в mmCIF
+8ZLI.pdb_sequences.fa
+9A8E.pdb_sequences.fa
+9ATW.pdb_sequences.fa
+9e8v.pdb_sequences.fa
+9e8w.pdb_sequences.fa
+9e8x.pdb_sequences.fa
+9e8y.pdb_sequences.fa
+9JAZ.pdb_sequences.fa
+9JB0.pdb_sequences.fa
+9JB1.pdb_sequences.fa
+9JB2.pdb_sequences.fa
+9kc2.pdb_sequences.fa
+9kcn.pdb_sequences.fa
+9kco.pdb_sequences.fa
+9LIV.pdb_sequences.fa
+9M5Q.pdb_sequences.fa
+9M5R.pdb_sequences.fa
+9O4B.pdb_sequences.fa
+9UMH.pdb_sequences.fa
