@@ -54,22 +54,29 @@ for structure_file in list(folder.glob("*.cif")) + list(folder.glob("*.mmcif")):
     chain_id = chain.id
 
     # Get the entity ID corresponding to the first chain
-    asym_ids = mmcif.get("_struct_asym.id", [])
+    seq_res = ""
+
     entity_ids = mmcif.get("_struct_asym.entity_id", [])
+    seq_entity_ids = mmcif.get("_entity_poly_seq.entity_id", [])
+    seq_mon_ids = mmcif.get("_entity_poly_seq.mon_id", [])
+    seq_nums = mmcif.get("_entity_poly_seq.num", [])
 
-    if isinstance(asym_ids, str):
-        asym_ids = [asym_ids]
+    if entity_ids and seq_entity_ids:
+        entity_id = entity_ids[0]
 
-    if isinstance(entity_ids, str):
-        entity_ids = [entity_ids]
+        sequence_data = []
 
-    entity_id = None
+        for current_entity_id, num, mon_id in zip(
+            seq_entity_ids, seq_nums, seq_mon_ids
+        ):
+            if current_entity_id == entity_id:
+                sequence_data.append((int(num), mon_id))
 
-    for asym_id, current_entity_id in zip(asym_ids, entity_ids):
-        if asym_id == chain_id:
-            entity_id = current_entity_id
-            break
+        sequence_data.sort()
 
+        for _, mon_id in sequence_data:
+            seq_res += get_amino_acid(mon_id)
+            
     # Get the complete sequence from _entity_poly_seq
     if entity_id is not None:
         seq_entity_ids = mmcif.get("_entity_poly_seq.entity_id", [])
