@@ -21,3 +21,5 @@
 9M5R.pdb_sequences.fa
 9O4B.pdb_sequences.fa
 9UMH.pdb_sequences.fa
+
+для некоторых из оставшихся cif есть файл pdb с таким же названием, где atom seq совпадает, а seqres нет
