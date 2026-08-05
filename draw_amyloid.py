@@ -2,13 +2,27 @@ import numpy as np
 from matplotlib import pyplot as plot
 import matplotlib
 
+from sequences_alignment import align_records
+from alignment_index import get_aligned_indices
+
+import plotly.tools as tools
+
 matplotlib.rcParams['figure.dpi'] = 300
 matplotlib.rcParams['mathtext.fontset'] = 'stix'
-matplotlib.rc("font", family="STIXGeneral")
-matplotlib.rc("font", weight="ultralight")
+matplotlib.rc('font', family='STIXGeneral')
+matplotlib.rc('font', weight='ultralight')
 
 
-def draw_projection(points: list, res_ids: list, color: str, zorder: int):
+def get_plane_basis(points_1: list, points_2: list, paired_indices: list):
+    if paired_indices is None:
+        points = points_1 + points_2
+    else:
+        points = []
+        for pair in paired_indices:
+            i, j = pair[0], pair[1]
+            points.append(points_1[i])
+            points.append(points_2[j])
+
     pts = np.array(points, dtype=float)
     mean = np.mean(pts, axis=0)
     centered = pts - mean
@@ -19,18 +33,35 @@ def draw_projection(points: list, res_ids: list, color: str, zorder: int):
 
     plane_basis = eigvecs[:, 1:]
 
+    return plane_basis
+
+
+def draw_projection(points: list, res_ids: list, seq: str, color: str,
+                    zorder: int, plane_basis):
+    '''Draw projection of the points on a plane with defined basis.'''
+
+    pts = np.array(points, dtype=float)
+    mean = np.mean(pts, axis=0)
+    centered = pts - mean
+
     coords_2d = centered @ plane_basis
 
     projections = [tuple(coord) for coord in coords_2d]
 
     xs, ys = [coord[0] for coord in projections], [coord[1] for coord in projections]
 
-    plot.scatter(xs, ys, color=color, s=128, zorder=zorder)
+    plot.scatter(xs, ys, color=color, s=256, zorder=zorder)
+
+    for i in range(len(projections)):
+        plot.text(xs[i] - 0.25, ys[i] - 0.35, seq[i], color='white',
+                  zorder=zorder, fontweight='bold')
 
     for i in range(len(points) - 1):
         if res_ids[i+1] - res_ids[i] == 1:
             plot.plot([xs[i], xs[i+1]], [ys[i], ys[i+1]], color=color,
-                      linewidth=4, zorder=zorder, alpha=0.5)
+                      linewidth=4, zorder=zorder-1, alpha=0.5)
+
+    return plane_basis, xs, ys
 
 
 def read_records(records_file_path: str):
@@ -117,53 +148,69 @@ def best_rmsd_transform(list1: list, list2: list, pairs: list) -> list:
     return [tuple(pt) for pt in transformed]
 
 
-def draw_aligned_records(records_file_path_1: str, color_1: str,
-                         records_file_path_2: str, color_2: str):
+def connect_projected_points(xs_1: list, ys_1: list, xs_2: list, ys_2: list,
+                             paired_indices: list):
+    for pair in paired_indices:
+        i, j = pair[0], pair[1]
+        plot.plot([xs_1[i], xs_2[j]], [ys_1[i], ys_2[j]], linewidth=1,
+                  color='black', zorder = -1, linestyle='--')
+
+
+def show_points_matplotlib(list1, color1, name1, list2, color2, name2):
+    fig = plot.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    if list1:
+        x1, y1, z1 = zip(*list1)
+        ax.plot(x1, y1, z1, color=color1, linewidth=1, label=name1)
+        #ax.scatter(x1, y1, z1, c=color1, s=20)
+    if list2:
+        x2, y2, z2 = zip(*list2)
+        ax.plot(x2, y2, z2, color=color2, linewidth=1, label=name2)
+        #ax.scatter(x2, y2, z2, c=color2, s=20)
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_zticks([])
+    ax.legend(fontsize=8)
+    ax.view_init(elev=30, azim=45, roll=15)
+    plot.tight_layout()
+    plot.show()
+    #plot.savefig('figures/alignment.png')
+
+
+def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
+                         records_file_path_2: str, color_2: str, name_2: str):
     '''Draw a planar projection for a pair of aligned amyloid structures.'''
 
     points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
     points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
 
-    paired_indices = [
-        (0, 6),
-        (1, 7),
-        (2, 8),
-        (3, 9),
-        (4, 10),
-        (5, 11),
-        (6, 12),
-        (7, 13),
-        (8, 14),
-        (9, 15),
-        (10, 16),
-        (11, 17),
-        (12, 18),
-        (13, 19),
-        (14, 20),
-        (15, 21),
-        (16, 22),
-        (17, 23),
-        (18, 24),
-        (19, 25),
-        (20, 26),
-        (21, 27),
-        (22, 28),
-        (23, 29),
-        (24, 30),
-        (25, 31)
-    ]
+    seq_1_aligned, seq_2_aligned = align_records(records_file_path_1,
+                                                 records_file_path_2)
 
-    points_2 = best_rmsd_transform(points_1, points_2, paired_indices)
+    paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
 
-    draw_projection(points_1, res_ids_1, color_1, zorder=0)
-    draw_projection(points_2, res_ids_2, color_2, zorder=1)
+    points_2 = best_rmsd_transform(points_1, points_2, paired_indices[:])
+
+    #plane_basis = get_plane_basis(points_1, points_2, paired_indices[:])
+
+    #_, xs_1, ys_1 = draw_projection(points_1, res_ids_1, seq_1, color_1, 10,
+                                    #plane_basis)
+
+    #_, xs_2, ys_2 = draw_projection(points_2, res_ids_2, seq_2, color_2, 0,
+                                    #plane_basis)
+
+    #connect_projected_points(xs_1, ys_1, xs_2, ys_2, paired_indices)
+
+    show_points_matplotlib(points_1, color_1, name_1, points_2, color_2, name_2)
 
 
 #draw_records('all_amyloid_structures/2beg.pdb_records.txt', '#f4acb7', 0)
 #draw_records('all_amyloid_structures/2mxu.pdb_records.txt', '#669bbc', 1)
 
-draw_aligned_records('all_amyloid_structures/2beg.pdb_records.txt', '#f4acb7',
-                     'all_amyloid_structures/2mxu.pdb_records.txt', '#669bbc')
+draw_aligned_records('all_amyloid_structures/9v45.pdb_records.txt', '#f4acb7', '9v45',
+                     'all_amyloid_structures/9v4f.pdb_records.txt', '#669bbc', '9v4f')
 
 plot.xticks([])
 plot.yticks([])
