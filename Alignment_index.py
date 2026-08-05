@@ -1,6 +1,3 @@
-input_file = "alignment.txt"
-output_file = "pairs.txt"
-
 with open(r'C:\Users\User\Documents\bioinf\smtb\alignment.txt', "r", encoding="utf-8") as file:
     alignment = file.readlines()
 
