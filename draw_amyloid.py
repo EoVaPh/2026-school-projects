@@ -5,8 +5,6 @@ import matplotlib
 from sequences_alignment import align_records
 from alignment_index import get_aligned_indices
 
-import plotly.tools as tools
-
 matplotlib.rcParams['figure.dpi'] = 300
 matplotlib.rcParams['mathtext.fontset'] = 'stix'
 matplotlib.rc('font', family='STIXGeneral')
@@ -209,8 +207,8 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
 #draw_records('all_amyloid_structures/2beg.pdb_records.txt', '#f4acb7', 0)
 #draw_records('all_amyloid_structures/2mxu.pdb_records.txt', '#669bbc', 1)
 
-draw_aligned_records('all_amyloid_structures/9v45.pdb_records.txt', '#f4acb7', '9v45',
-                     'all_amyloid_structures/9v4f.pdb_records.txt', '#669bbc', '9v4f')
+draw_aligned_records('all_amyloid_structures/9tpt.pdb_records.txt', '#f4acb7', '9tpt',
+                     'all_amyloid_structures/7v49.pdb_records.txt', '#669bbc', '7v49')
 
 plot.xticks([])
 plot.yticks([])
