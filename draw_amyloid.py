@@ -2,8 +2,13 @@ import numpy as np
 from matplotlib import pyplot as plot
 import matplotlib
 
+from Bio import Align
+
 from sequences_alignment import align_records
+from sequences_alignment import no_isolated_alignments
 from alignment_index import get_aligned_indices
+
+import plotly.tools as tools
 
 matplotlib.rcParams['figure.dpi'] = 300
 matplotlib.rcParams['mathtext.fontset'] = 'stix'
@@ -79,6 +84,75 @@ def read_records(records_file_path: str):
         res_ids.append(int(tokens[4]))
 
     return points, seq, res_ids
+
+
+def read_seqres(file_path, structure_name):
+
+    with open(file_path, "r", encoding="utf8") as file:
+        lines = file.readlines()
+    for i in range(len(lines)):
+        if lines[i].strip() == ">" + structure_name:
+            return lines[i + 1].strip()
+        
+    raise ValueError(f"SEQRES for {structure_name} not found")
+
+
+def read_aiupred(file_path, structure_name):
+
+    with open(file_path, "r", encoding="utf8") as file:
+        lines = file.readlines()
+
+    for i in range(len(lines)):
+        if lines[i].strip() == ">" + structure_name:
+            values = lines[i + 1].split()
+            return [float(value) for value in values]
+
+    raise ValueError(f"AIUPred values for {structure_name} not found")
+
+
+def align_sequences(seq_1, seq_2):
+
+    aligner = Align.PairwiseAligner()
+
+    aligner.match_score = 1.0
+    aligner.mismatch_score = -1.0
+    aligner.open_gap_score = -2.0
+
+    alignments = aligner.align(seq_1, seq_2)
+
+    for alignment in alignments:
+
+        tokens = format(alignment, "phylip").split()
+
+        seq_1_aligned = tokens[2]
+        seq_2_aligned = tokens[3]
+
+        if no_isolated_alignments(seq_1_aligned, seq_2_aligned):
+            return (seq_1_aligned, seq_2_aligned)
+
+    raise ValueError("No suitable alignment found")
+
+
+def create_idr(seqres, atom_seq, aiupred_values):
+
+    seqres_aligned, atom_aligned = align_sequences(seqres, atom_seq)
+
+    print("\nSEQRES / ATOM alignment:")
+    print("SEQRES:", seqres_aligned)
+    print("ATOM:  ", atom_aligned)
+
+    IDR = []
+
+    seqres_index = 0
+
+    for i in range(len(seqres_aligned)):
+        if seqres_aligned[i] != "-":
+            p = aiupred_values[seqres_index]
+            seqres_index += 1
+        if atom_aligned[i] != "-":
+            IDR.append(p)
+
+    return IDR
 
 
 def best_rmsd_transform(list1: list, list2: list, pairs: list) -> list:
@@ -184,6 +258,28 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
     points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
     points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
 
+    seqres_1 = read_seqres(r"C:\Users\User\Documents\bioinf\smtb\seqres_all_new.txt", name_1)
+    seqres_2 = read_seqres(r"C:\Users\User\Documents\bioinf\smtb\seqres_all_new.txt", name_2)
+
+    aiupred_1 = read_aiupred(r"C:\Users\User\Documents\bioinf\smtb\AIUPred_new.txt", name_1)
+    aiupred_2 = read_aiupred(r"C:\Users\User\Documents\bioinf\smtb\AIUPred_new.txt", name_2)
+
+    IDR_1 = create_idr(seqres_1, seq_1, aiupred_1)
+    IDR_2 = create_idr(seqres_2, seq_2, aiupred_2)
+
+    print("\nIDR_1:")
+    print(IDR_1)
+
+    print("\nIDR_2:")
+    print(IDR_2)
+
+    print("\nLengths:")
+    print("ATOM sequence 1:", len(seq_1))
+    print("IDR_1:", len(IDR_1))
+
+    print("ATOM sequence 2:", len(seq_2))
+    print("IDR_2:", len(IDR_2))
+
     seq_1_aligned, seq_2_aligned = align_records(records_file_path_1,
                                                  records_file_path_2)
 
@@ -207,8 +303,8 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
 #draw_records('all_amyloid_structures/2beg.pdb_records.txt', '#f4acb7', 0)
 #draw_records('all_amyloid_structures/2mxu.pdb_records.txt', '#669bbc', 1)
 
-draw_aligned_records('all_amyloid_structures/9tpt.pdb_records.txt', '#f4acb7', '9tpt',
-                     'all_amyloid_structures/7v49.pdb_records.txt', '#669bbc', '7v49')
+draw_aligned_records(r'C:\Users\User\Documents\bioinf\smtb\records_new\7xjx.pdb_records.txt', '#f4acb7', '7xjx.pdb',
+                     r'C:\Users\User\Documents\bioinf\smtb\records_new\7yk2.pdb_records.txt', '#669bbc', '7yk2.pdb')
 
 plot.xticks([])
 plot.yticks([])
