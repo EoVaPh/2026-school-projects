@@ -1,6 +1,9 @@
 import numpy as np
 from matplotlib import pyplot as plot
 import matplotlib
+import os
+
+from pathlib import Path
 
 from Bio import Align
 
@@ -12,8 +15,8 @@ import plotly.tools as tools
 
 matplotlib.rcParams['figure.dpi'] = 300
 matplotlib.rcParams['mathtext.fontset'] = 'stix'
-matplotlib.rc('font', family='STIXGeneral')
-matplotlib.rc('font', weight='ultralight')
+#matplotlib.rc('font', family='STIXGeneral')
+#matplotlib.rc('font', weight='ultralight')
 
 
 def get_plane_basis(points_1: list, points_2: list, paired_indices: list):
@@ -228,18 +231,39 @@ def connect_projected_points(xs_1: list, ys_1: list, xs_2: list, ys_2: list,
                   color='black', zorder = -1, linestyle='--')
 
 
-def show_points_matplotlib(list1, color1, name1, list2, color2, name2):
+def show_points_matplotlib(list1, color1, name1, IDR_1, IDR_1_value, list2, color2, name2, IDR_2, IDR_2_value):
     fig = plot.figure()
     ax = fig.add_subplot(111, projection='3d')
 
     if list1:
         x1, y1, z1 = zip(*list1)
         ax.plot(x1, y1, z1, color=color1, linewidth=1, label=name1)
-        #ax.scatter(x1, y1, z1, c=color1, s=20)
+
+        idr_indices_1 = [i for i, value in enumerate(IDR_1) if value > IDR_1_value]
+        print(f"\n{name1}: atoms with IDR > {IDR_1_value}:")
+        print(idr_indices_1)
+
+        idr_points_1 = [list1[i] for i in idr_indices_1 if i < len(list1)]
+        idr_points_1 = idr_points_1[6:-6]
+
+        if idr_points_1:
+            idr_x1, idr_y1, idr_z1 = zip(*idr_points_1)
+            ax.scatter(idr_x1, idr_y1, idr_z1, c=color1, s=20)
+    
     if list2:
         x2, y2, z2 = zip(*list2)
         ax.plot(x2, y2, z2, color=color2, linewidth=1, label=name2)
-        #ax.scatter(x2, y2, z2, c=color2, s=20)
+
+        idr_indices_2 = [i for i, value in enumerate(IDR_2) if value > IDR_2_value]
+        print(f"\n{name2}: atoms with IDR > {IDR_2_value}:")
+        print(idr_indices_2)
+
+        idr_points_2 = [list2[i] for i in idr_indices_2 if i < len(list2)]
+        idr_points_2 = idr_points_2[6:-6]
+
+        if idr_points_2:
+            idr_x2, idr_y2, idr_z2 = zip(*idr_points_2)
+            ax.scatter(idr_x2, idr_y2, idr_z2, c=color2, s=20)
 
     ax.set_xticks([])
     ax.set_yticks([])
@@ -297,16 +321,41 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
 
     #connect_projected_points(xs_1, ys_1, xs_2, ys_2, paired_indices)
 
-    show_points_matplotlib(points_1, color_1, name_1, points_2, color_2, name_2)
+    #show_points_matplotlib(points_1, color_1, name_1, IDR_1, np.percentile(IDR_1, 50), points_2, color_2, name_2, IDR_2, np.percentile(IDR_2, 50))
+    
+    a = 0.5
+    IDR_1_value = min(IDR_1[6:-6]) + a * (max(IDR_1[6:-6]) - min(IDR_1[6:-6]))
+    IDR_2_value = min(IDR_2[6:-6]) + a * (max(IDR_2[6:-6]) - min(IDR_2[6:-6]))
+    
+    show_points_matplotlib(points_1, color_1, name_1, IDR_1, IDR_1_value, points_2, color_2, name_2, IDR_2, IDR_2_value)
 
 
 #draw_records('all_amyloid_structures/2beg.pdb_records.txt', '#f4acb7', 0)
 #draw_records('all_amyloid_structures/2mxu.pdb_records.txt', '#669bbc', 1)
 
-draw_aligned_records(r'C:\Users\User\Documents\bioinf\smtb\records_new\7xjx.pdb_records.txt', '#f4acb7', '7xjx.pdb',
-                     r'C:\Users\User\Documents\bioinf\smtb\records_new\7yk2.pdb_records.txt', '#669bbc', '7yk2.pdb')
+name_1 = '9d5c'
+name_2 = '8gf7'
+extension_1 = ''
+extension_2 = ''
+
+folder = Path(r"C:\Users\User\Documents\bioinf\smtb\records_new")
+for file in folder.iterdir():
+    if file.is_file() and file.name[:4] == name_1:
+        extension_1 = file.name[4:8]
+    if file.is_file() and file.name[:4] == name_2:
+        extension_2 = file.name[4:8]
+        
+
+draw_aligned_records(r'C:\Users\User\Documents\bioinf\smtb\records_new\\' + name_1 + extension_1 + '_records.txt', 
+                     '#f4acb7', 
+                     name_1 + extension_1,
+                     r'C:\Users\User\Documents\bioinf\smtb\records_new\\' + name_2 + extension_2 + '_records.txt', 
+                     '#669bbc', 
+                     name_2 + extension_2)
 
 plot.xticks([])
 plot.yticks([])
 plot.tight_layout()
+
+os.makedirs('figures', exist_ok=True)
 plot.savefig('figures/proj.png')
