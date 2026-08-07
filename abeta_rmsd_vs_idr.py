@@ -457,22 +457,22 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
 
 def read_structure_names(file_path: Path) -> list[str]:
     """Read structure names, one name per line."""
-    print('?')
+
     with open(file_path, "r", encoding="utf8") as file:
         lines = file.readlines()
 
-    structure_names = [line.strip() for line in lines[196:281]]
-    
-        
+    structure_names = [line.strip() for line in lines[323:338]]
+
     print(structure_names)
     return structure_names
 
-structure_names = read_structure_names(r"C:\Users\User\Documents\bioinf\smtb\families.txt")
-structure_names.remove('9wap')
+structure_names = read_structure_names('families.txt')
+if '9wap' in structure_names:
+    structure_names.remove('9wap')
 
 all_mean_idr = []
 all_rmsd = []
-WINDOW_SIZE = 10
+WINDOW_SIZE = 3
 OUTPUT_FILE = Path("figures/rmsd_vs_mean_idr_all_pairs.png")
 
 for name_1, name_2 in combinations(structure_names, 2):
@@ -483,38 +483,42 @@ for name_1, name_2 in combinations(structure_names, 2):
     extension_1 = ''
     extension_2 = ''
 
-    folder = Path(r'C:\Users\User\Documents\bioinf\smtb\records')
+    folder = Path('records')
     for file in folder.iterdir():
         if file.is_file() and file.name[:4] == name_1:
             extension_1 = file.name[4:8]
         if file.is_file() and file.name[:4] == name_2:
             extension_2 = file.name[4:8]
 
-    records_file_path_1 = Path(r'C:\Users\User\Documents\bioinf\smtb\records\\' + name_1 + extension_1 + '_records.txt')
-    records_file_path_2 = Path(r'C:\Users\User\Documents\bioinf\smtb\records\\' + name_2 + extension_2 + '_records.txt')
+    records_file_path_1 = Path('records/' + name_1 + extension_1 + '_records.txt')
+    records_file_path_2 = Path('records/' + name_2 + extension_2 + '_records.txt')
 
 
     with redirect_stdout(StringIO()):
         points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
         points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
 
-        seqres_1 = read_seqres(r'C:\Users\User\Documents\bioinf\smtb\seqres_all.txt', name_1 + extension_1)
-        seqres_2 = read_seqres(r'C:\Users\User\Documents\bioinf\smtb\seqres_all.txt', name_2 + extension_2)
+        seqres_1 = read_seqres('seqres_all.txt', name_1 + extension_1)
+        seqres_2 = read_seqres('seqres_all.txt', name_2 + extension_2)
 
-        aiupred_1 = read_aiupred(r'C:\Users\User\Documents\bioinf\smtb\AIUPred_all.txt', name_1 + extension_1)
-        aiupred_2 = read_aiupred(r'C:\Users\User\Documents\bioinf\smtb\AIUPred_all.txt', name_2 + extension_2)
+        aiupred_1 = read_aiupred('AIUPred_all.txt', name_1 + extension_1)
+        aiupred_2 = read_aiupred('AIUPred_all.txt', name_2 + extension_2)
 
         IDR_1 = select_atomseq_idr(seqres_1, seq_1, aiupred_1)
         IDR_2 = select_atomseq_idr(seqres_2, seq_2, aiupred_2)
 
-        seq_1_aligned, seq_2_aligned = align_records(records_file_path_1,
-                                                        records_file_path_2)
-        
-        paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
+        try:
+            seq_1_aligned, seq_2_aligned = align_records(records_file_path_1,
+                                                            records_file_path_2)
 
-        results = get_window_rmsd(seq_1_aligned, seq_2_aligned, points_1, points_2, WINDOW_SIZE)    
+            paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
 
-        mean_idr_values, rmsd_values = plot_rmsd_vs_mean_idr(results, IDR_1, IDR_2)
+            results = get_window_rmsd(seq_1_aligned, seq_2_aligned, points_1, points_2, WINDOW_SIZE)
+
+            mean_idr_values, rmsd_values = plot_rmsd_vs_mean_idr(results, IDR_1, IDR_2)
+        except:
+            mean_idr_values = []
+            rmsd_values = []
 
     all_mean_idr.extend(mean_idr_values)
     all_rmsd.extend(rmsd_values)
@@ -524,7 +528,9 @@ plot.figure()
 plot.scatter(
     all_mean_idr,
     all_rmsd,
-    s=40
+    s=40,
+    alpha=0.1,
+    color='#005f73'
 )
 
 plot.xlabel("Mean IDR")
