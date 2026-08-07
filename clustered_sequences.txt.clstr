@@ -1,0 +1,867 @@
+>Cluster 0
+0	107aa, >10ij.pdb... at 99.07%
+1	107aa, >10ik.pdb... at 99.07%
+2	441aa, >10kr.pdb... at 99.77%
+3	51aa, >22JY.pdb... at 96.08%
+4	73aa, >5o3l.pdb... at 100.00%
+5	73aa, >5o3o.pdb... at 100.00%
+6	73aa, >5o3t.pdb... at 100.00%
+7	94aa, >6gx5.pdb... at 91.49%
+8	441aa, >6hre.pdb... at 100.00%
+9	441aa, >6hrf.pdb... at 100.00%
+10	441aa, >6nwp.pdb... at 100.00%
+11	441aa, >6nwq.pdb... at 100.00%
+12	59aa, >6qjh.pdb... at 100.00%
+13	48aa, >6qjm.pdb... at 100.00%
+14	48aa, >6qjp.pdb... at 100.00%
+15	28aa, >6qjq.pdb... at 96.43%
+16	441aa, >6tjo.pdb... at 100.00%
+17	441aa, >6tjx.pdb... at 100.00%
+18	107aa, >6VH7.pdb... at 100.00%
+19	107aa, >6VHA.pdb... at 100.00%
+20	77aa, >6VHL.pdb... at 100.00%
+21	77aa, >6VI3.pdb... at 100.00%
+22	441aa, >7mkf.pdb... at 100.00%
+23	441aa, >7mkg.pdb... at 100.00%
+24	441aa, >7mkh.pdb... at 100.00%
+25	441aa, >7nrq.pdb... at 100.00%
+26	441aa, >7nrs.pdb... at 100.00%
+27	441aa, >7nrt.pdb... at 100.00%
+28	441aa, >7nrv.pdb... at 100.00%
+29	441aa, >7nrx.pdb... at 100.00%
+30	441aa, >7p65.pdb... at 100.00%
+31	441aa, >7p66.pdb... at 100.00%
+32	441aa, >7p67.pdb... at 100.00%
+33	441aa, >7p68.pdb... at 100.00%
+34	441aa, >7p6a.pdb... at 100.00%
+35	441aa, >7p6b.pdb... at 100.00%
+36	441aa, >7p6c.pdb... at 100.00%
+37	441aa, >7p6d.pdb... at 100.00%
+38	441aa, >7p6e.pdb... at 100.00%
+39	441aa, >7qjv.pdb... at 100.00%
+40	441aa, >7qjw.pdb... at 100.00%
+41	441aa, >7qjx.pdb... at 100.00%
+42	441aa, >7qjy.pdb... at 100.00%
+43	441aa, >7qjz.pdb... at 100.00%
+44	441aa, >7qk1.pdb... at 100.00%
+45	441aa, >7qk2.pdb... at 100.00%
+46	441aa, >7qk3.pdb... at 100.00%
+47	441aa, >7qk5.pdb... at 100.00%
+48	441aa, >7qk6.pdb... at 100.00%
+49	441aa, >7qkf.pdb... at 100.00%
+50	441aa, >7qkg.pdb... at 100.00%
+51	441aa, >7qkh.pdb... at 100.00%
+52	441aa, >7qki.pdb... at 100.00%
+53	441aa, >7qkj.pdb... at 100.00%
+54	441aa, >7qkk.pdb... at 100.00%
+55	441aa, >7qkl.pdb... at 100.00%
+56	441aa, >7qkm.pdb... at 100.00%
+57	441aa, >7qku.pdb... at 100.00%
+58	441aa, >7qkv.pdb... at 100.00%
+59	441aa, >7qkw.pdb... at 100.00%
+60	441aa, >7qkx.pdb... at 100.00%
+61	441aa, >7qky.pdb... at 100.00%
+62	441aa, >7qkz.pdb... at 100.00%
+63	441aa, >7ql0.pdb... at 100.00%
+64	441aa, >7ql1.pdb... at 100.00%
+65	441aa, >7ql2.pdb... at 100.00%
+66	441aa, >7ql3.pdb... at 100.00%
+67	441aa, >7ql4.pdb... at 100.00%
+68	441aa, >7r4t.pdb... at 100.00%
+69	441aa, >7r5h.pdb... at 100.00%
+70	441aa, >7sp1.pdb... at 100.00%
+71	110aa, >7u0z.pdb... at 100.00%
+72	441aa, >7upe.pdb... at 100.00%
+73	441aa, >7upf.pdb... at 100.00%
+74	441aa, >7upg.pdb... at 100.00%
+75	95aa, >7ymn.pdb... at 100.00%
+76	96aa, >7ypg.pdb... at 98.96%
+77	441aa, >8azu.pdb... at 100.00%
+78	441aa, >8bgs.pdb... at 100.00%
+79	441aa, >8bgv.pdb... at 100.00%
+80	441aa, >8byn.pdb... at 100.00%
+81	441aa, >8caq.pdb... at 100.00%
+82	441aa, >8cax.pdb... at 100.00%
+83	19aa, >8fnz.pdb... at 84.21%
+84	73aa, >8fug.pdb... at 100.00%
+85	202aa, >8g54.pdb... at 100.00%
+86	202aa, >8g55.pdb... at 100.00%
+87	96aa, >8G58.pdb... at 98.96%
+88	15aa, >8oh2.pdb... at 86.67%
+89	15aa, >8ohi.pdb... at 86.67%
+90	15aa, >8ohp.pdb... at 86.67%
+91	15aa, >8oi0.pdb... at 86.67%
+92	412aa, >8orf.pdb... at 85.44%
+93	412aa, >8org.pdb... at 85.44%
+94	441aa, >8ot6.pdb... at 100.00%
+95	441aa, >8ot9.pdb... at 100.00%
+96	441aa, >8otc.pdb... at 100.00%
+97	441aa, >8otg.pdb... at 100.00%
+98	441aa, >8oth.pdb... at 100.00%
+99	441aa, >8oti.pdb... at 100.00%
+100	441aa, >8otj.pdb... at 100.00%
+101	94aa, >8p34.pdb... at 91.49%
+102	441aa, >8ppo.pdb... at 100.00%
+103	382aa, >8q27.pdb... at 91.10%
+104	382aa, >8q2j.pdb... at 91.10%
+105	382aa, >8q2k.pdb... at 91.10%
+106	382aa, >8q2l.pdb... at 91.10%
+107	382aa, >8q7f.pdb... at 91.10%
+108	382aa, >8q7l.pdb... at 91.10%
+109	382aa, >8q7m.pdb... at 91.10%
+110	382aa, >8q7p.pdb... at 91.10%
+111	382aa, >8q7t.pdb... at 91.10%
+112	382aa, >8q88.pdb... at 91.10%
+113	382aa, >8q8c.pdb... at 91.10%
+114	382aa, >8q8d.pdb... at 91.10%
+115	382aa, >8q8e.pdb... at 91.10%
+116	382aa, >8q8f.pdb... at 91.10%
+117	382aa, >8q8l.pdb... at 91.10%
+118	382aa, >8q8m.pdb... at 91.10%
+119	382aa, >8q8r.pdb... at 91.10%
+120	382aa, >8q8s.pdb... at 91.10%
+121	382aa, >8q8u.pdb... at 91.10%
+122	382aa, >8q8v.pdb... at 91.10%
+123	382aa, >8q8w.pdb... at 91.10%
+124	382aa, >8q8x.pdb... at 91.10%
+125	382aa, >8q8y.pdb... at 91.10%
+126	382aa, >8q8z.pdb... at 91.10%
+127	94aa, >8q92.pdb... at 98.94%
+128	56aa, >8q96.pdb... at 98.21%
+129	382aa, >8q97.pdb... at 91.10%
+130	382aa, >8q98.pdb... at 91.10%
+131	382aa, >8q99.pdb... at 91.10%
+132	382aa, >8q9a.pdb... at 91.10%
+133	382aa, >8q9b.pdb... at 91.10%
+134	382aa, >8q9c.pdb... at 91.10%
+135	382aa, >8q9d.pdb... at 91.10%
+136	382aa, >8q9e.pdb... at 91.10%
+137	382aa, >8q9f.pdb... at 91.10%
+138	382aa, >8q9g.pdb... at 91.10%
+139	382aa, >8q9h.pdb... at 91.10%
+140	382aa, >8q9i.pdb... at 91.10%
+141	382aa, >8q9j.pdb... at 91.10%
+142	382aa, >8q9k.pdb... at 91.10%
+143	382aa, >8q9l.pdb... at 91.10%
+144	382aa, >8q9m.pdb... at 91.10%
+145	382aa, >8q9o.pdb... at 91.10%
+146	382aa, >8qcp.pdb... at 91.10%
+147	382aa, >8qcr.pdb... at 91.10%
+148	382aa, >8qjj.pdb... at 91.10%
+149	441aa, >8R3T.pdb... at 100.00%
+150	73aa, >8seh.pdb... at 100.00%
+151	73aa, >8sei.pdb... at 100.00%
+152	383aa, >8ttl.pdb... at 90.60%
+153	383aa, >8ttn.pdb... at 90.34%
+154	75aa, >8uq7.pdb... at 100.00%
+155	19aa, >8v1n.pdb... at 94.74%
+156	383aa, >8wcp.pdb... at 91.12%
+157	441aa, >8zwl.pdb... at 100.00%
+158	441aa, >8zwm.pdb... at 100.00%
+159	441aa, >8zx6.pdb... at 100.00%
+160	882aa, >9axz.cif... *
+161	22aa, >9b3a.pdb... at 90.91%
+162	22aa, >9b3c.pdb... at 90.91%
+163	441aa, >9bbl.pdb... at 99.09%
+164	441aa, >9bbm.pdb... at 99.09%
+165	77aa, >9bxi.pdb... at 100.00%
+166	77aa, >9bxo.pdb... at 100.00%
+167	77aa, >9bxq.pdb... at 100.00%
+168	77aa, >9bxr.pdb... at 100.00%
+169	73aa, >9czi.pdb... at 100.00%
+170	74aa, >9czl.pdb... at 98.65%
+171	23aa, >9dme.pdb... at 86.96%
+172	441aa, >9eo7.pdb... at 99.77%
+173	441aa, >9eo9.pdb... at 99.77%
+174	441aa, >9eoe.pdb... at 99.77%
+175	441aa, >9eog.pdb... at 100.00%
+176	441aa, >9eoh.pdb... at 99.77%
+177	441aa, >9erm.pdb... at 100.00%
+178	441aa, >9ern.pdb... at 100.00%
+179	441aa, >9ero.pdb... at 100.00%
+180	73aa, >9fh6.pdb... at 100.00%
+181	107aa, >9gg0.pdb... at 99.07%
+182	107aa, >9gg1.pdb... at 99.07%
+183	96aa, >9gg6.pdb... at 98.96%
+184	101aa, >9hbb.pdb... at 100.00%
+185	129aa, >9mc2.pdb... at 99.22%
+186	90aa, >9mr8.pdb... at 100.00%
+187	449aa, >9o8e.pdb... at 98.22%
+188	449aa, >9o8h.pdb... at 98.22%
+189	72aa, >9r2f.pdb... at 98.61%
+190	136aa, >9r2h.pdb... at 99.26%
+191	22aa, >9s2b.pdb... at 100.00%
+192	76aa, >9shs.pdb... at 100.00%
+193	441aa, >9tzx.pdb... at 99.77%
+>Cluster 1
+0	42aa, >21fb.pdb... at 100.00%
+1	42aa, >2beg.pdb... at 100.00%
+2	40aa, >2lmn.pdb... at 100.00%
+3	40aa, >2lmo.pdb... at 100.00%
+4	40aa, >2lmp.pdb... at 100.00%
+5	40aa, >2lmq.pdb... at 100.00%
+6	40aa, >2lnq.pdb... at 97.50%
+7	40aa, >2m4j.pdb... at 100.00%
+8	26aa, >2mpz.pdb... at 96.15%
+9	39aa, >2mvx.pdb... at 100.00%
+10	42aa, >2mxu.pdb... at 100.00%
+11	42aa, >2nao.pdb... at 100.00%
+12	28aa, >5aef.pdb... at 100.00%
+13	42aa, >5kk3.pdb... at 100.00%
+14	42aa, >5oqv.pdb... at 100.00%
+15	15aa, >6nb9.pdb... at 93.33%
+16	15aa, >6oiz.pdb... at 100.00%
+17	40aa, >6shs.pdb... at 100.00%
+18	40aa, >6ti5.pdb... at 100.00%
+19	40aa, >6ti6.pdb... at 100.00%
+20	40aa, >6TI7.pdb... at 100.00%
+21	40aa, >6w0o.pdb... at 100.00%
+22	37aa, >7f29.pdb... at 100.00%
+23	42aa, >7q4b.pdb... at 100.00%
+24	42aa, >7q4m.pdb... at 100.00%
+25	42aa, >8azs.pdb... at 100.00%
+26	42aa, >8azt.pdb... at 100.00%
+27	42aa, >8bfa.pdb... at 97.62%
+28	42aa, >8bfb.pdb... at 97.62%
+29	42aa, >8bfz.pdb... at 97.62%
+30	40aa, >8bg0.pdb... at 97.50%
+31	37aa, >8bg9.pdb... at 97.30%
+32	42aa, >8ezd.pdb... at 100.00%
+33	42aa, >8eze.pdb... at 100.00%
+34	40aa, >8FF2.pdb... at 100.00%
+35	40aa, >8FF3.pdb... at 100.00%
+36	40aa, >8j47.pdb... at 97.50%
+37	770aa, >8kew.pdb... *
+38	770aa, >8kf1.pdb... at 100.00%
+39	770aa, >8kf3.pdb... at 100.00%
+40	770aa, >8kf4.pdb... at 100.00%
+41	770aa, >8kf5.pdb... at 100.00%
+42	770aa, >8kf6.pdb... at 100.00%
+43	42aa, >8ol2.pdb... at 100.00%
+44	42aa, >8ol3.pdb... at 100.00%
+45	42aa, >8ol5.pdb... at 100.00%
+46	42aa, >8ol6.pdb... at 100.00%
+47	42aa, >8ol7.pdb... at 97.62%
+48	42aa, >8olg.pdb... at 95.24%
+49	42aa, >8oln.pdb... at 95.24%
+50	42aa, >8olo.pdb... at 100.00%
+51	42aa, >8olq.pdb... at 95.24%
+52	40aa, >8ot1.pdb... at 100.00%
+53	40aa, >8ot3.pdb... at 100.00%
+54	40aa, >8ot4.pdb... at 100.00%
+55	770aa, >8otf.pdb... at 100.00%
+56	40aa, >8ovk.pdb... at 100.00%
+57	40aa, >8ovm.pdb... at 100.00%
+58	40aa, >8owd.pdb... at 100.00%
+59	40aa, >8owe.pdb... at 100.00%
+60	40aa, >8owj.pdb... at 100.00%
+61	40aa, >8owk.pdb... at 100.00%
+62	40aa, >8qn6.pdb... at 100.00%
+63	40aa, >8qn7.pdb... at 100.00%
+64	34aa, >8sej.pdb... at 100.00%
+65	40aa, >8sek.pdb... at 100.00%
+66	40aa, >8sel.pdb... at 100.00%
+67	34aa, >9czn.pdb... at 100.00%
+68	34aa, >9czp.pdb... at 100.00%
+69	36aa, >9fh1.pdb... at 100.00%
+70	36aa, >9fh2.pdb... at 100.00%
+71	36aa, >9fh3.pdb... at 100.00%
+72	36aa, >9fh4.pdb... at 100.00%
+73	36aa, >9fh5.pdb... at 100.00%
+74	40aa, >9iio.pdb... at 100.00%
+75	42aa, >9K0D.pdb... at 100.00%
+76	42aa, >9K0E.pdb... at 100.00%
+77	42aa, >9K0F.pdb... at 100.00%
+78	40aa, >9M5P.pdb... at 97.50%
+79	40aa, >9raw.pdb... at 100.00%
+80	40aa, >9rax.pdb... at 100.00%
+81	40aa, >9riv.pdb... at 100.00%
+82	40aa, >9riw.pdb... at 100.00%
+83	42aa, >9wao.pdb... at 100.00%
+84	42aa, >9wap.pdb... at 100.00%
+>Cluster 2
+0	758aa, >9b4l.pdb... *
+1	758aa, >9b4m.pdb... at 100.00%
+2	758aa, >9b4n.pdb... at 100.00%
+3	758aa, >9b4o.pdb... at 100.00%
+4	758aa, >9pgo.pdb... at 100.00%
+>Cluster 3
+0	592aa, >8ons.pdb... *
+1	592aa, >9thm.pdb... at 100.00%
+2	592aa, >9thn.pdb... at 100.00%
+3	592aa, >9thp.pdb... at 100.00%
+4	592aa, >9tke.pdb... at 99.83%
+5	592aa, >9tkf.pdb... at 100.00%
+6	592aa, >9tkg.pdb... at 100.00%
+7	592aa, >9tkh.pdb... at 100.00%
+8	592aa, >9TKI.pdb... at 100.00%
+9	592aa, >9tkj.pdb... at 100.00%
+10	592aa, >9tkk.pdb... at 100.00%
+11	592aa, >9tkl.pdb... at 100.00%
+12	95aa, >9tkz.pdb... at 100.00%
+13	592aa, >9tl2.pdb... at 100.00%
+>Cluster 4
+0	565aa, >9kzb.pdb... *
+1	565aa, >9KZO.pdb... at 100.00%
+2	565aa, >9L2S.pdb... at 100.00%
+>Cluster 5
+0	563aa, >9v45.pdb... *
+1	563aa, >9v4f.pdb... at 100.00%
+>Cluster 6
+0	500aa, >9u4u.cif... *
+>Cluster 7
+0	241aa, >5w3n.pdb... at 91.29%
+1	104aa, >6xfm.pdb... at 99.04%
+2	483aa, >7vqq.pdb... *
+>Cluster 8
+0	426aa, >6wqk.pdb... *
+1	161aa, >8du2.pdb... at 99.38%
+2	161aa, >8duw.pdb... at 99.38%
+3	161aa, >8ec7.pdb... at 99.38%
+4	358aa, >8teq.pdb... at 78.21%
+5	358aa, >8ter.pdb... at 78.21%
+>Cluster 9
+0	11aa, >5w7v.pdb... at 100.00%
+1	50aa, >6n37.pdb... at 100.00%
+2	50aa, >6n3a.pdb... at 100.00%
+3	50aa, >6n3b.pdb... at 100.00%
+4	46aa, >6n3c.pdb... at 97.83%
+5	148aa, >7kwz.pdb... at 100.00%
+6	414aa, >7py2.pdb... *
+7	82aa, >7q3u.pdb... at 100.00%
+8	414aa, >8cg3.pdb... at 100.00%
+9	414aa, >8cgg.pdb... at 100.00%
+10	414aa, >8cgh.pdb... at 100.00%
+11	414aa, >8qx9.pdb... at 100.00%
+12	414aa, >8qxa.pdb... at 100.00%
+13	414aa, >8qxb.pdb... at 100.00%
+14	64aa, >9fof.pdb... at 100.00%
+15	62aa, >9for.pdb... at 100.00%
+>Cluster 10
+0	407aa, >7zir.pdb... *
+>Cluster 11
+0	396aa, >9hx4.pdb... *
+>Cluster 12
+0	381aa, >8ore.pdb... *
+1	352aa, >9cgx.pdb... at 88.92%
+2	352aa, >9cgz.pdb... at 88.92%
+3	352aa, >9h5g.pdb... at 85.51%
+4	352aa, >9h5j.pdb... at 85.51%
+>Cluster 13
+0	363aa, >8c50.pdb... *
+>Cluster 14
+0	135aa, >7bx7.pdb... at 100.00%
+1	320aa, >7zj2.pdb... *
+2	320aa, >9gkf.pdb... at 100.00%
+>Cluster 15
+0	67aa, >10xu.pdb... at 100.00%
+1	140aa, >2n0a.pdb... at 100.00%
+2	63aa, >6a6b.pdb... at 100.00%
+3	140aa, >6cu7.pdb... at 100.00%
+4	140aa, >6cu8.pdb... at 100.00%
+5	121aa, >6h6b.pdb... at 100.00%
+6	140aa, >6l1t.pdb... at 99.29%
+7	140aa, >6l1u.pdb... at 99.29%
+8	55aa, >6l4s.pdb... at 98.18%
+9	140aa, >6lrq.pdb... at 99.29%
+10	140aa, >6osj.pdb... at 100.00%
+11	140aa, >6osl.pdb... at 100.00%
+12	140aa, >6osm.pdb... at 100.00%
+13	140aa, >6peo.pdb... at 99.29%
+14	140aa, >6pes.pdb... at 99.29%
+15	140aa, >6rt0.pdb... at 100.00%
+16	140aa, >6rtb.pdb... at 100.00%
+17	140aa, >6sst.pdb... at 100.00%
+18	140aa, >6ssx.pdb... at 100.00%
+19	140aa, >6ufr.pdb... at 99.29%
+20	140aa, >6xyo.pdb... at 100.00%
+21	140aa, >6xyp.pdb... at 100.00%
+22	140aa, >6xyq.pdb... at 100.00%
+23	140aa, >7c1d.pdb... at 100.00%
+24	140aa, >7e0f.pdb... at 99.29%
+25	140aa, >7l7h.pdb... at 100.00%
+26	100aa, >7lc9.pdb... at 100.00%
+27	140aa, >7nca.pdb... at 100.00%
+28	140aa, >7ncg.pdb... at 100.00%
+29	140aa, >7nch.pdb... at 100.00%
+30	140aa, >7nci.pdb... at 100.00%
+31	140aa, >7ncj.pdb... at 100.00%
+32	140aa, >7nck.pdb... at 100.00%
+33	140aa, >7ozg.pdb... at 100.00%
+34	140aa, >7ozh.pdb... at 100.00%
+35	140aa, >7uak.pdb... at 99.29%
+36	140aa, >7v47.pdb... at 100.00%
+37	140aa, >7v48.pdb... at 100.00%
+38	140aa, >7v49.pdb... at 100.00%
+39	140aa, >7v4a.pdb... at 100.00%
+40	140aa, >7v4b.pdb... at 100.00%
+41	140aa, >7v4c.pdb... at 100.00%
+42	140aa, >7v4d.pdb... at 100.00%
+43	140aa, >7wmm.pdb... at 100.00%
+44	65aa, >7wnz.pdb... at 98.46%
+45	65aa, >7wo0.pdb... at 98.46%
+46	140aa, >7xjx.pdb... at 100.00%
+47	140aa, >7xo0.pdb... at 100.00%
+48	140aa, >7xo1.pdb... at 100.00%
+49	140aa, >7xo2.pdb... at 100.00%
+50	140aa, >7xo3.pdb... at 100.00%
+51	140aa, >7yk2.pdb... at 100.00%
+52	140aa, >7yk8.pdb... at 100.00%
+53	140aa, >7YNF.pdb... at 100.00%
+54	140aa, >7yng.pdb... at 100.00%
+55	140aa, >7ynl.pdb... at 100.00%
+56	140aa, >7ynm.pdb... at 100.00%
+57	140aa, >7ynn.pdb... at 100.00%
+58	140aa, >7yno.pdb... at 100.00%
+59	140aa, >7ynp.pdb... at 100.00%
+60	140aa, >7ynq.pdb... at 100.00%
+61	140aa, >7ynr.pdb... at 100.00%
+62	140aa, >7yns.pdb... at 100.00%
+63	140aa, >7ynt.pdb... at 100.00%
+64	140aa, >8a4l.pdb... at 100.00%
+65	140aa, >8a9l.pdb... at 100.00%
+66	140aa, >8ads.pdb... at 100.00%
+67	140aa, >8adu.pdb... at 100.00%
+68	140aa, >8adv.pdb... at 100.00%
+69	140aa, >8adw.pdb... at 100.00%
+70	140aa, >8aex.pdb... at 100.00%
+71	140aa, >8bqv.pdb... at 100.00%
+72	140aa, >8bqw.pdb... at 100.00%
+73	140aa, >8ce7.pdb... at 100.00%
+74	140aa, >8ceb.pdb... at 100.00%
+75	140aa, >8cyr.pdb... at 100.00%
+76	140aa, >8cys.pdb... at 100.00%
+77	140aa, >8cyt.pdb... at 100.00%
+78	140aa, >8cyv.pdb... at 100.00%
+79	140aa, >8cyw.pdb... at 100.00%
+80	140aa, >8cyx.pdb... at 100.00%
+81	140aa, >8cyy.pdb... at 100.00%
+82	140aa, >8cz0.pdb... at 100.00%
+83	140aa, >8cz1.pdb... at 100.00%
+84	140aa, >8cz2.pdb... at 100.00%
+85	140aa, >8cz3.pdb... at 100.00%
+86	140aa, >8cz6.pdb... at 100.00%
+87	140aa, >8fpt.pdb... at 100.00%
+88	90aa, >8gf7.pdb... at 100.00%
+89	140aa, >8h03.pdb... at 100.00%
+90	140aa, >8h04.pdb... at 100.00%
+91	140aa, >8h05.pdb... at 100.00%
+92	140aa, >8hzb.pdb... at 100.00%
+93	140aa, >8hzc.pdb... at 100.00%
+94	140aa, >8hzs.pdb... at 100.00%
+95	140aa, >8JEX.pdb... at 100.00%
+96	140aa, >8JEY.pdb... at 100.00%
+97	140aa, >8oqi.pdb... at 100.00%
+98	140aa, >8pix.pdb... at 100.00%
+99	140aa, >8pjo.pdb... at 99.29%
+100	140aa, >8pk2.pdb... at 100.00%
+101	140aa, >8pk4.pdb... at 99.29%
+102	134aa, >8qpz.pdb... at 99.25%
+103	140aa, >8ri9.pdb... at 100.00%
+104	140aa, >8rqm.pdb... at 100.00%
+105	140aa, >8rrr.pdb... at 100.00%
+106	140aa, >8uie.pdb... at 95.00%
+107	140aa, >8uka.pdb... at 100.00%
+108	140aa, >8x7b.pdb... at 99.29%
+109	140aa, >8x7l.pdb... at 99.29%
+110	140aa, >8x7m.pdb... at 99.29%
+111	140aa, >8x7o.pdb... at 99.29%
+112	140aa, >8x7p.pdb... at 99.29%
+113	140aa, >8x7q.pdb... at 99.29%
+114	140aa, >8x7r.pdb... at 99.29%
+115	140aa, >8xwd.pdb... at 100.00%
+116	140aa, >8y2p.pdb... at 100.00%
+117	140aa, >8y2q.pdb... at 100.00%
+118	55aa, >8zlo.pdb... at 98.18%
+119	99aa, >8zlp.pdb... at 98.99%
+120	99aa, >8zmy.pdb... at 98.99%
+121	140aa, >8zwh.pdb... at 99.29%
+122	140aa, >8zwi.pdb... at 100.00%
+123	140aa, >8zwj.pdb... at 100.00%
+124	140aa, >8zwk.pdb... at 100.00%
+125	140aa, >9c5r.pdb... at 100.00%
+126	140aa, >9cd9.pdb... at 100.00%
+127	140aa, >9cda.pdb... at 100.00%
+128	140aa, >9ck3.pdb... at 100.00%
+129	140aa, >9ckk.pdb... at 99.29%
+130	140aa, >9ckl.pdb... at 99.29%
+131	140aa, >9cx6.pdb... at 100.00%
+132	96aa, >9d5c.pdb... at 100.00%
+133	140aa, >9e8u.pdb... at 100.00%
+134	280aa, >9e8v.cif... *
+135	280aa, >9e8w.cif... at 100.00%
+136	280aa, >9e8x.cif... at 100.00%
+137	280aa, >9e8y.cif... at 100.00%
+138	140aa, >9e9x.pdb... at 100.00%
+139	140aa, >9euu.pdb... at 100.00%
+140	140aa, >9ewv.pdb... at 95.00%
+141	140aa, >9fyp.pdb... at 100.00%
+142	140aa, >9hc6.pdb... at 100.00%
+143	140aa, >9hc7.pdb... at 100.00%
+144	140aa, >9hc8.pdb... at 100.00%
+145	140aa, >9hc9.pdb... at 100.00%
+146	140aa, >9hca.pdb... at 100.00%
+147	140aa, >9hcb.pdb... at 100.00%
+148	140aa, >9hgr.pdb... at 100.00%
+149	140aa, >9hgs.pdb... at 99.29%
+150	140aa, >9hxa.pdb... at 99.29%
+151	140aa, >9ic7.pdb... at 100.00%
+152	140aa, >9ijp.pdb... at 100.00%
+153	62aa, >9jby.pdb... at 95.16%
+154	140aa, >9jc3.pdb... at 98.57%
+155	140aa, >9jc4.pdb... at 98.57%
+156	140aa, >9jc5.pdb... at 98.57%
+157	140aa, >9jd7.pdb... at 98.57%
+158	140aa, >9jd8.pdb... at 98.57%
+159	63aa, >9jdk.pdb... at 96.83%
+160	140aa, >9je2.pdb... at 97.86%
+161	140aa, >9je4.pdb... at 97.86%
+162	140aa, >9je6.pdb... at 98.57%
+163	140aa, >9je7.pdb... at 97.86%
+164	140aa, >9je8.pdb... at 98.57%
+165	62aa, >9jke.pdb... at 95.16%
+166	140aa, >9k23.pdb... at 95.00%
+167	140aa, >9k24.pdb... at 95.00%
+168	140aa, >9ka3.pdb... at 97.86%
+169	140aa, >9ka4.pdb... at 97.14%
+170	140aa, >9kal.pdb... at 97.86%
+171	280aa, >9kc2.cif... at 100.00%
+172	280aa, >9kco.cif... at 98.57%
+173	140aa, >9kcp.pdb... at 100.00%
+174	140aa, >9lon.pdb... at 95.00%
+175	280aa, >9M5K.cif... at 100.00%
+176	140aa, >9m5k.pdb... at 100.00%
+177	140aa, >9m5l.pdb... at 100.00%
+178	280aa, >9O4B.cif... at 100.00%
+179	140aa, >9obp.pdb... at 100.00%
+180	140aa, >9qyl.pdb... at 100.00%
+181	140aa, >9qyn.pdb... at 99.29%
+182	140aa, >9rb3.pdb... at 99.29%
+183	140aa, >9rb6.pdb... at 99.29%
+184	140aa, >9rb7.pdb... at 100.00%
+185	140aa, >9rb8.pdb... at 100.00%
+186	140aa, >9rb9.pdb... at 100.00%
+187	140aa, >9rba.pdb... at 100.00%
+188	140aa, >9rbb.pdb... at 100.00%
+189	61aa, >9rzf.pdb... at 98.36%
+190	65aa, >9tpt.pdb... at 98.46%
+191	140aa, >9y0s.pdb... at 100.00%
+>Cluster 16
+0	274aa, >7qvc.pdb... *
+1	274aa, >7qvf.pdb... at 99.64%
+2	274aa, >7qwg.pdb... at 99.64%
+3	274aa, >7qwl.pdb... at 99.64%
+4	274aa, >7qwm.pdb... at 100.00%
+5	274aa, >7saq.pdb... at 99.64%
+6	274aa, >7sar.pdb... at 99.64%
+7	274aa, >7sas.pdb... at 99.64%
+8	274aa, >7tmc.pdb... at 99.64%
+9	135aa, >7u10.pdb... at 99.26%
+10	135aa, >7u11.pdb... at 99.26%
+11	135aa, >7u12.pdb... at 99.26%
+12	135aa, >7u13.pdb... at 99.26%
+13	135aa, >7u14.pdb... at 99.26%
+14	135aa, >7u15.pdb... at 99.26%
+15	135aa, >7u16.pdb... at 99.26%
+16	135aa, >7u17.pdb... at 100.00%
+17	135aa, >7u18.pdb... at 100.00%
+18	274aa, >7x83.pdb... at 99.64%
+19	135aa, >7x84.pdb... at 99.26%
+20	274aa, >8f9k.pdb... at 99.64%
+21	274aa, >8j7n.pdb... at 99.64%
+22	274aa, >8j7p.pdb... at 99.64%
+23	274aa, >8otd.pdb... at 100.00%
+24	274aa, >8ote.pdb... at 100.00%
+25	274aa, >8x5h.pdb... at 99.64%
+26	135aa, >9fnb.pdb... at 99.26%
+>Cluster 17
+0	260aa, >9xbk.pdb... *
+1	260aa, >9xbl.pdb... at 100.00%
+2	260aa, >9xbm.pdb... at 100.00%
+3	260aa, >9xbn.pdb... at 99.62%
+4	260aa, >9xbo.pdb... at 99.62%
+5	260aa, >9xbp.pdb... at 100.00%
+>Cluster 18
+0	210aa, >6lni.pdb... at 93.33%
+1	85aa, >6uur.pdb... at 90.59%
+2	210aa, >7dwv.pdb... at 92.86%
+3	142aa, >7lna.pdb... at 88.73%
+4	132aa, >7qig.pdb... at 92.42%
+5	126aa, >7rl4.pdb... at 95.24%
+6	254aa, >7td6.pdb... at 88.19%
+7	62aa, >7umq.pdb... at 93.55%
+8	62aa, >7un5.pdb... at 93.55%
+9	25aa, >7yat.pdb... at 92.00%
+10	136aa, >8a00.pdb... at 89.71%
+11	123aa, >8dja.pdb... at 93.50%
+12	231aa, >8efu.pdb... at 87.88%
+13	123aa, >8wzx.pdb... at 94.31%
+14	256aa, >9dmy.pdb... *
+15	256aa, >9dmz.pdb... at 100.00%
+>Cluster 19
+0	243aa, >9pvy.pdb... *
+1	243aa, >9pvz.pdb... at 100.00%
+2	243aa, >9pw3.pdb... at 100.00%
+>Cluster 20
+0	116aa, >6ic3.pdb... at 78.45%
+1	220aa, >9LIV.cif... *
+2	220aa, >9liw.cif... at 100.00%
+3	110aa, >9v91.pdb... at 82.73%
+4	110aa, >9x45.pdb... at 82.73%
+>Cluster 21
+0	131aa, >9j4d.pdb... at 100.00%
+1	219aa, >9j4e.pdb... *
+2	219aa, >9j4f.pdb... at 99.54%
+>Cluster 22
+0	136aa, >6hud.pdb... at 100.00%
+1	217aa, >8cpe.pdb... *
+2	129aa, >9ljc.pdb... at 89.92%
+3	116aa, >9oka.pdb... at 87.07%
+>Cluster 23
+0	173aa, >9u4l.pdb... *
+>Cluster 24
+0	154aa, >7vzf.pdb... at 100.00%
+1	154aa, >8ihu.pdb... at 99.35%
+2	154aa, >8ihv.pdb... at 99.35%
+3	154aa, >9iyd.pdb... at 99.35%
+4	153aa, >9iyj.pdb... at 99.35%
+5	161aa, >9jbo.pdb... *
+6	161aa, >9jbp.pdb... at 98.76%
+7	161aa, >9li1.pdb... at 99.38%
+>Cluster 25
+0	159aa, >9qlu.pdb... *
+>Cluster 26
+0	155aa, >6vw2.pdb... *
+1	37aa, >6y1a.pdb... at 100.00%
+2	37aa, >6zrf.pdb... at 97.30%
+3	37aa, >6zrq.pdb... at 94.59%
+4	37aa, >6zrr.pdb... at 94.59%
+5	38aa, >7m61.pdb... at 97.37%
+6	38aa, >7m62.pdb... at 97.37%
+7	38aa, >7m64.pdb... at 97.37%
+8	38aa, >7m65.pdb... at 97.37%
+9	37aa, >7ykw.pdb... at 97.30%
+10	37aa, >7yl0.pdb... at 97.30%
+11	37aa, >7yl3.pdb... at 97.30%
+12	37aa, >7yl7.pdb... at 97.30%
+13	38aa, >8awt.pdb... at 94.74%
+14	38aa, >8az0.pdb... at 94.74%
+15	38aa, >8az1.pdb... at 94.74%
+16	38aa, >8az2.pdb... at 94.74%
+17	38aa, >8az3.pdb... at 94.74%
+18	38aa, >8az4.pdb... at 94.74%
+19	38aa, >8az5.pdb... at 94.74%
+20	38aa, >8az6.pdb... at 94.74%
+21	38aa, >8az7.pdb... at 94.74%
+22	38aa, >8qj1.pdb... at 94.74%
+23	38aa, >8qvp.pdb... at 94.74%
+24	38aa, >8qvq.pdb... at 94.74%
+25	38aa, >8qvr.pdb... at 94.74%
+26	38aa, >8r1s.pdb... at 94.74%
+27	38aa, >8r4i.pdb... at 97.37%
+28	38aa, >8RM8.pdb... at 94.74%
+29	38aa, >8rm9.pdb... at 94.74%
+30	38aa, >9gz6.pdb... at 97.37%
+31	38aa, >9gzp.pdb... at 97.37%
+32	38aa, >9gzs.pdb... at 97.37%
+33	38aa, >9gzt.pdb... at 97.37%
+34	38aa, >9gzw.pdb... at 97.37%
+35	38aa, >9gzx.pdb... at 97.37%
+36	38aa, >9gzy.pdb... at 97.37%
+37	37aa, >9ulz.pdb... at 100.00%
+>Cluster 27
+0	118aa, >7nsl.pdb... at 76.27%
+1	152aa, >9lix.pdb... *
+2	152aa, >9liy.pdb... at 100.00%
+3	129aa, >9lj0.pdb... at 80.62%
+>Cluster 28
+0	11aa, >2M5N.pdb... at 100.00%
+1	127aa, >6sdz.pdb... at 99.21%
+2	127aa, >7ob4.pdb... at 99.21%
+3	127aa, >7z40.pdb... at 100.00%
+4	127aa, >8ade.pdb... at 100.00%
+5	147aa, >8e7d.pdb... *
+6	147aa, >8e7e.pdb... at 99.32%
+7	147aa, >8e7h.pdb... at 100.00%
+8	147aa, >8e7i.pdb... at 99.32%
+9	147aa, >8e7j.pdb... at 99.32%
+10	147aa, >8g9r.pdb... at 100.00%
+11	147aa, >8gbr.pdb... at 100.00%
+12	127aa, >8PKE.pdb... at 99.21%
+13	127aa, >8PKF.pdb... at 99.21%
+14	127aa, >8PKG.pdb... at 99.21%
+15	147aa, >8tdn.pdb... at 99.32%
+16	147aa, >8tdo.pdb... at 99.32%
+17	126aa, >9bdm.pdb... at 100.00%
+18	126aa, >9bdr.pdb... at 100.00%
+19	127aa, >9byn.pdb... at 99.21%
+20	127aa, >9bzs.pdb... at 99.21%
+21	127aa, >9d21.pdb... at 99.21%
+22	127aa, >9d23.pdb... at 99.21%
+23	127aa, >9d24.pdb... at 99.21%
+24	127aa, >9d27.pdb... at 99.21%
+25	127aa, >9d2g.pdb... at 99.21%
+26	147aa, >9hx3.pdb... at 100.00%
+27	147aa, >9hyw.pdb... at 99.32%
+28	127aa, >9nnn.pdb... at 100.00%
+29	126aa, >9zld.pdb... at 100.00%
+>Cluster 29
+0	15aa, >5v7z.pdb... at 100.00%
+1	141aa, >7da4.pdb... *
+2	108aa, >7dac.pdb... at 93.52%
+3	141aa, >8z94.pdb... at 100.00%
+>Cluster 30
+0	138aa, >8enq.pdb... *
+>Cluster 31
+0	21aa, >8g2v.pdb... at 100.00%
+1	133aa, >9non.pdb... *
+>Cluster 32
+0	132aa, >9faa.pdb... *
+1	132aa, >9fab.pdb... at 100.00%
+2	132aa, >9fac.pdb... at 100.00%
+>Cluster 33
+0	131aa, >9lja.pdb... *
+1	131aa, >9ljb.pdb... at 100.00%
+>Cluster 34
+0	130aa, >8qut.pdb... *
+1	130aa, >8r4a.pdb... at 99.23%
+>Cluster 35
+0	83aa, >6dso.pdb... at 71.08%
+1	66aa, >6mst.pdb... at 81.82%
+2	103aa, >6zcf.pdb... at 72.82%
+3	103aa, >6zcg.pdb... at 72.82%
+4	83aa, >6zch.pdb... at 71.08%
+5	103aa, >7ovt.pdb... at 72.82%
+6	129aa, >7zh7.pdb... *
+7	68aa, >7zky.pdb... at 82.35%
+8	103aa, >9R4Z.pdb... at 72.82%
+>Cluster 36
+0	129aa, >8qv8.pdb... *
+1	125aa, >9J0L.pdb... at 100.00%
+2	125aa, >9J0M.pdb... at 100.00%
+>Cluster 37
+0	81aa, >6z1i.pdb... at 91.36%
+1	89aa, >6z1o.pdb... at 91.01%
+2	113aa, >8r47.pdb... at 85.84%
+3	115aa, >9eme.pdb... *
+>Cluster 38
+0	114aa, >9oyr.pdb... *
+1	114aa, >9oyt.pdb... at 99.12%
+>Cluster 39
+0	110aa, >8ZLI.cif... *
+>Cluster 40
+0	22aa, >2e8d.pdb... at 95.45%
+1	64aa, >6gk3.pdb... at 98.44%
+2	94aa, >8a7o.pdb... at 97.87%
+3	94aa, >8a7p.pdb... at 97.87%
+4	99aa, >8a7q.pdb... *
+5	99aa, >8a7t.pdb... at 97.98%
+>Cluster 41
+0	98aa, >8z93.pdb... *
+1	88aa, >9hr6.pdb... at 100.00%
+2	22aa, >9hr9.pdb... at 100.00%
+>Cluster 42
+0	98aa, >9cww.pdb... *
+1	98aa, >9oyo.pdb... at 98.98%
+2	98aa, >9oyq.pdb... at 100.00%
+3	98aa, >9oys.pdb... at 98.98%
+4	98aa, >9oyw.pdb... at 100.00%
+>Cluster 43
+0	91aa, >9kty.pdb... *
+1	91aa, >9ktz.pdb... at 98.90%
+>Cluster 44
+0	86aa, >6r4r.pdb... *
+>Cluster 45
+0	84aa, >6JPD.pdb... *
+>Cluster 46
+0	80aa, >12gb.cif... at 97.50%
+1	84aa, >8bfa.cif... *
+2	80aa, >8ot4.cif... at 97.50%
+3	84aa, >9A8E.cif... at 97.62%
+4	84aa, >9a8f.cif... at 97.62%
+5	84aa, >9JAZ.cif... at 95.24%
+6	84aa, >9JB0.cif... at 95.24%
+7	84aa, >9JB1.cif... at 95.24%
+8	84aa, >9JB2.cif... at 92.86%
+9	80aa, >9M5Q.cif... at 95.00%
+10	80aa, >9M5R.cif... at 95.00%
+11	80aa, >9UMH.cif... at 95.00%
+>Cluster 47
+0	79aa, >2KJ3.pdb... *
+1	79aa, >2LBU.pdb... at 100.00%
+2	79aa, >2rnm.pdb... at 100.00%
+>Cluster 48
+0	78aa, >6EKA.pdb... *
+>Cluster 49
+0	78aa, >8oq4.pdb... *
+1	78aa, >8oq5.pdb... at 100.00%
+>Cluster 50
+0	71aa, >9C1U.pdb... *
+>Cluster 51
+0	34aa, >9iah.pdb... at 97.06%
+1	64aa, >9jhf.cif... *
+2	32aa, >9jhg.pdb... at 100.00%
+3	32aa, >9jhh.pdb... at 100.00%
+4	64aa, >9jhi.cif... at 100.00%
+>Cluster 52
+0	50aa, >9u02.pdb... *
+>Cluster 53
+0	49aa, >8spa.pdb... *
+>Cluster 54
+0	42aa, >9ATW.cif... *
+>Cluster 55
+0	40aa, >2nnt.pdb... *
+>Cluster 56
+0	40aa, >7q64.pdb... *
+1	40aa, >7q65.pdb... at 100.00%
+2	40aa, >7q66.pdb... at 100.00%
+3	40aa, >7q67.pdb... at 100.00%
+>Cluster 57
+0	35aa, >9JST.pdb... *
+1	33aa, >9JSU.pdb... at 96.97%
+2	34aa, >9JSV.pdb... at 97.06%
+3	35aa, >9JSW.pdb... at 100.00%
+4	34aa, >9JSX.pdb... at 97.06%
+>Cluster 58
+0	31aa, >6tub.pdb... *
+>Cluster 59
+0	31aa, >6vps.pdb... *
+1	31aa, >8yac.pdb... at 100.00%
+>Cluster 60
+0	30aa, >8ci8.pdb... *
+>Cluster 61
+0	30aa, >8sbd.pdb... *
+>Cluster 62
+0	30aa, >9k8s.pdb... *
+1	30aa, >9k8t.pdb... at 100.00%
+>Cluster 63
+0	29aa, >6nzn.pdb... *
+1	29aa, >7xm8.pdb... at 100.00%
+>Cluster 64
+0	24aa, >9rbd.pdb... at 100.00%
+1	26aa, >9rbw.pdb... *
+>Cluster 65
+0	24aa, >8ib0.pdb... *
+>Cluster 66
+0	23aa, >8hia.pdb... *
+>Cluster 67
+0	21aa, >2N1E.pdb... *
+>Cluster 68
+0	21aa, >8rvt.pdb... *
+>Cluster 69
+0	18aa, >7qv5.pdb... *
+>Cluster 70
+0	17aa, >7qv6.pdb... *
+>Cluster 71
+0	16aa, >9hgb.pdb... *
+1	16aa, >9hgl.pdb... at 100.00%
+2	16aa, >9hgt.pdb... at 100.00%
+3	16aa, >9hi8.pdb... at 100.00%
+4	16aa, >9hid.pdb... at 100.00%
+>Cluster 72
+0	13aa, >9r7e.pdb... *
+>Cluster 73
+0	12aa, >8gz8.pdb... *
+1	12aa, >8gz9.pdb... at 100.00%
+>Cluster 74
+0	12aa, >9qfm.pdb... *

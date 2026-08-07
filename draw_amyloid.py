@@ -357,10 +357,10 @@ for file in folder.iterdir():
         extension_2 = file.name[4:8]
 
 
-draw_aligned_records('structure_reads/' + name_1 + extension_1 + '_records.txt',
+draw_aligned_records('records/' + name_1 + extension_1 + '_records.txt',
                      '#f4acb7',
                      name_1 + extension_1,
-                     'structure_reads/' + name_2 + extension_2 + '_records.txt',
+                     'records/' + name_2 + extension_2 + '_records.txt',
                      '#669bbc',
                      name_2 + extension_2)
 
