@@ -2,7 +2,7 @@ from aiupred import AIUPred
 import numpy as np
 
 # Define the target FASTA file.
-target = 'Plants/Arabidopsis_thaliana'
+target = 'C:\\Users\\User\\Documents\\bioinf\\smtb\\seqres_all_new.txt'
 
 # Initialize the predictor.
 predictor = AIUPred()
@@ -17,7 +17,7 @@ num_seqs = len(lines) / 2
 
 # Start writing to file containing the same annotations but pre-calculated IDR
 # propensities instead of sequences.
-output_fasta_file = open('AIUPred_output/' + target, 'w')
+output_fasta_file = open(r'C:\Users\User\Documents\bioinf\smtb\AIUPred_new.txt', 'w')
 
 count = 0
 
