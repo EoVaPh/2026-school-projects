@@ -2,6 +2,10 @@ from Bio import Align
 
 
 def no_isolated_alignments(seq_1_aligned: str, seq_2_aligned: str) -> bool:
+    '''Check whether the alignment represented by two strings of format AA--BB-
+       AA---B- does not have isolated aligned residues like "-B-" in the
+       example.'''
+
     assert len(seq_1_aligned) == len(seq_2_aligned)
 
     L = len(seq_1_aligned)
@@ -28,7 +32,26 @@ def no_isolated_alignments(seq_1_aligned: str, seq_2_aligned: str) -> bool:
     return True
 
 
-def align_records(records_file_path_1: str, records_file_path_2: str):
+def align_records(records_file_path_1: str, records_file_path_2: str) -> tuple:
+    '''Find the best alignment of two given sequences among alignments which do
+       not contain isolated aligned residues, and return the alignment in format
+       of two aligned strings, that may contain "-" symbols for gaps.
+
+    Parameters
+    ----------
+        records_file_path_1 : str
+            Path to the first records file containing extended data about
+            ATOMSEQ.
+        records_file_path_2 : str
+            Path to the second records file containing extended data about
+            ATOMSEQ.
+
+    Returns
+    -------
+        Two aligned sequences of the same length, where "-" symbols can be used
+        for alignment with gaps.
+    '''
+
     pars1 = []
     pars2 = []
 

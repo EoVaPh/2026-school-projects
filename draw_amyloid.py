@@ -89,18 +89,27 @@ def read_records(records_file_path: str):
     return points, seq, res_ids
 
 
-def read_seqres(file_path, structure_name):
+def read_seqres(file_path: str, structure_name: str) -> str:
+    '''Read SEQRES from a file containing SEQRES of the structures, in
+       FASTA format.
+
+       >PDB ID
+       SEQRES'''
 
     with open(file_path, "r", encoding="utf8") as file:
         lines = file.readlines()
     for i in range(len(lines)):
         if lines[i].strip() == ">" + structure_name:
             return lines[i + 1].strip()
-        
+
     raise ValueError(f"SEQRES for {structure_name} not found")
 
 
-def read_aiupred(file_path, structure_name):
+def read_aiupred(file_path: str, structure_name: str) -> list:
+    '''Read IDR propensities of a SEQRES from a FASTA-like file in format
+
+    >PDB ID
+    p_1 p_2 p_3'''
 
     with open(file_path, "r", encoding="utf8") as file:
         lines = file.readlines()
@@ -136,7 +145,9 @@ def align_sequences(seq_1, seq_2):
     raise ValueError("No suitable alignment found")
 
 
-def create_idr(seqres, atom_seq, aiupred_values):
+def select_atomseq_idr(seqres: str, atom_seq: str, aiupred_values: list) -> list:
+    '''Having pre-calculated IDR propensities for a SEQRES, transit them ATOMSEQ
+       in accordance with SEQRES-ATOMSEQ alignment.'''
 
     seqres_aligned, atom_aligned = align_sequences(seqres, atom_seq)
 
@@ -231,7 +242,8 @@ def connect_projected_points(xs_1: list, ys_1: list, xs_2: list, ys_2: list,
                   color='black', zorder = -1, linestyle='--')
 
 
-def show_points_matplotlib(list1, color1, name1, IDR_1, IDR_1_value, list2, color2, name2, IDR_2, IDR_2_value):
+def show_points_matplotlib(list1, color1, name1, IDR_1, IDR_1_value,
+                           list2, color2, name2, IDR_2, IDR_2_value):
     fig = plot.figure()
     ax = fig.add_subplot(111, projection='3d')
 
@@ -244,12 +256,12 @@ def show_points_matplotlib(list1, color1, name1, IDR_1, IDR_1_value, list2, colo
         print(idr_indices_1)
 
         idr_points_1 = [list1[i] for i in idr_indices_1 if i < len(list1)]
-        idr_points_1 = idr_points_1[6:-6]
+        idr_points_1 = idr_points_1[:]
 
         if idr_points_1:
             idr_x1, idr_y1, idr_z1 = zip(*idr_points_1)
             ax.scatter(idr_x1, idr_y1, idr_z1, c=color1, s=20)
-    
+
     if list2:
         x2, y2, z2 = zip(*list2)
         ax.plot(x2, y2, z2, color=color2, linewidth=1, label=name2)
@@ -259,7 +271,7 @@ def show_points_matplotlib(list1, color1, name1, IDR_1, IDR_1_value, list2, colo
         print(idr_indices_2)
 
         idr_points_2 = [list2[i] for i in idr_indices_2 if i < len(list2)]
-        idr_points_2 = idr_points_2[6:-6]
+        idr_points_2 = idr_points_2[:]
 
         if idr_points_2:
             idr_x2, idr_y2, idr_z2 = zip(*idr_points_2)
@@ -282,14 +294,14 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
     points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
     points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
 
-    seqres_1 = read_seqres(r"C:\Users\User\Documents\bioinf\smtb\seqres_all_new.txt", name_1)
-    seqres_2 = read_seqres(r"C:\Users\User\Documents\bioinf\smtb\seqres_all_new.txt", name_2)
+    seqres_1 = read_seqres('seqres_all.txt', name_1)
+    seqres_2 = read_seqres('seqres_all.txt', name_2)
 
-    aiupred_1 = read_aiupred(r"C:\Users\User\Documents\bioinf\smtb\AIUPred_new.txt", name_1)
-    aiupred_2 = read_aiupred(r"C:\Users\User\Documents\bioinf\smtb\AIUPred_new.txt", name_2)
+    aiupred_1 = read_aiupred('AIUPred_all.txt', name_1)
+    aiupred_2 = read_aiupred('AIUPred_all.txt', name_2)
 
-    IDR_1 = create_idr(seqres_1, seq_1, aiupred_1)
-    IDR_2 = create_idr(seqres_2, seq_2, aiupred_2)
+    IDR_1 = select_atomseq_idr(seqres_1, seq_1, aiupred_1)
+    IDR_2 = select_atomseq_idr(seqres_2, seq_2, aiupred_2)
 
     print("\nIDR_1:")
     print(IDR_1)
@@ -298,6 +310,7 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
     print(IDR_2)
 
     print("\nLengths:")
+
     print("ATOM sequence 1:", len(seq_1))
     print("IDR_1:", len(IDR_1))
 
@@ -309,7 +322,7 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
 
     paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
 
-    points_2 = best_rmsd_transform(points_1, points_2, paired_indices[:])
+    points_2 = best_rmsd_transform(points_1, points_2, paired_indices[-10:])
 
     #plane_basis = get_plane_basis(points_1, points_2, paired_indices[:])
 
@@ -322,35 +335,33 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
     #connect_projected_points(xs_1, ys_1, xs_2, ys_2, paired_indices)
 
     #show_points_matplotlib(points_1, color_1, name_1, IDR_1, np.percentile(IDR_1, 50), points_2, color_2, name_2, IDR_2, np.percentile(IDR_2, 50))
-    
-    a = 0.5
-    IDR_1_value = min(IDR_1[6:-6]) + a * (max(IDR_1[6:-6]) - min(IDR_1[6:-6]))
-    IDR_2_value = min(IDR_2[6:-6]) + a * (max(IDR_2[6:-6]) - min(IDR_2[6:-6]))
-    
-    show_points_matplotlib(points_1, color_1, name_1, IDR_1, IDR_1_value, points_2, color_2, name_2, IDR_2, IDR_2_value)
+
+    a = 0.3
+    IDR_1_value = min(IDR_1[:]) + a * (max(IDR_1[:]) - min(IDR_1[:]))
+    IDR_2_value = min(IDR_2[:]) + a * (max(IDR_2[:]) - min(IDR_2[:]))
+
+    show_points_matplotlib(points_1, color_1, name_1, IDR_1, IDR_1_value,
+                           points_2, color_2, name_2, IDR_2, IDR_2_value)
 
 
-#draw_records('all_amyloid_structures/2beg.pdb_records.txt', '#f4acb7', 0)
-#draw_records('all_amyloid_structures/2mxu.pdb_records.txt', '#669bbc', 1)
-
-name_1 = '9d5c'
-name_2 = '8gf7'
+name_1 = '9fh3'
+name_2 = '7f29'
 extension_1 = ''
 extension_2 = ''
 
-folder = Path(r"C:\Users\User\Documents\bioinf\smtb\records_new")
+folder = Path('amyloid_structures/')
 for file in folder.iterdir():
     if file.is_file() and file.name[:4] == name_1:
         extension_1 = file.name[4:8]
     if file.is_file() and file.name[:4] == name_2:
         extension_2 = file.name[4:8]
-        
 
-draw_aligned_records(r'C:\Users\User\Documents\bioinf\smtb\records_new\\' + name_1 + extension_1 + '_records.txt', 
-                     '#f4acb7', 
+
+draw_aligned_records('structure_reads/' + name_1 + extension_1 + '_records.txt',
+                     '#f4acb7',
                      name_1 + extension_1,
-                     r'C:\Users\User\Documents\bioinf\smtb\records_new\\' + name_2 + extension_2 + '_records.txt', 
-                     '#669bbc', 
+                     'structure_reads/' + name_2 + extension_2 + '_records.txt',
+                     '#669bbc',
                      name_2 + extension_2)
 
 plot.xticks([])
