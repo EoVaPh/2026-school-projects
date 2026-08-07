@@ -234,6 +234,112 @@ def best_rmsd_transform(list1: list, list2: list, pairs: list) -> list:
     return [tuple(pt) for pt in transformed]
 
 
+def get_window_rmsd(seq_1_aligned, seq_2_aligned, points_1, points_2, window_size):
+
+
+    paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
+
+    results = {}
+
+    for start in range(len(paired_indices) - window_size + 1):
+
+        end = start + window_size
+
+        frame_name = f"{start} - {end - 1}"
+
+        frame_pairs = paired_indices[start:end]
+
+        first_pair = frame_pairs[0]
+        last_pair = frame_pairs[-1]
+
+        index1 = 0
+        index2 = 0
+
+        first_position = None
+        last_position = None
+
+        for position, (aa1, aa2) in enumerate(zip(seq_1_aligned, seq_2_aligned)):
+
+            if aa1 != '-' and aa2 != '-':
+                current_pair = (index1, index2)
+
+                if current_pair == first_pair:
+                    first_position = position
+
+                if current_pair == last_pair:
+                    last_position = position
+
+            if aa1 != '-':
+                index1 += 1
+
+            if aa2 != '-':
+                index2 += 1
+
+        window_1 = seq_1_aligned[first_position:last_position + 1]
+        window_2 = seq_2_aligned[first_position:last_position + 1]
+
+        if '-' in window_1 or '-' in window_2:
+            results[frame_name] = None
+            continue
+
+        frame_points_1 = [points_1[i] for i, j in frame_pairs]
+        frame_points_2 = [points_2[j] for i, j in frame_pairs]
+
+        local_pairs = [(i, i) for i in range(window_size)]
+        transformed_points_2 = best_rmsd_transform(frame_points_1, frame_points_2, local_pairs)
+
+        squared_distances = []
+
+        for p1, p2 in zip(frame_points_1, transformed_points_2):
+            distance_squared = np.sum((np.array(p1) - np.array(p2)) ** 2)
+            squared_distances.append(distance_squared)
+
+        rmsd = np.sqrt(np.mean(squared_distances))
+
+        results[frame_name] = rmsd
+
+    return results
+
+
+def plot_rmsd_vs_mean_idr(results: dict, IDR_1: list, IDR_2: list):
+
+
+    mean_idr_values = []
+    rmsd_values = []
+
+    for frame_name, rmsd in results.items():
+
+        if rmsd is None:
+            continue
+
+        start, end = map(int, frame_name.split(" - "))
+
+        idr_values = []
+
+        for pair_index in range(start, end + 1):
+
+            idr_1 = IDR_1[pair_index]
+            idr_2 = IDR_2[pair_index]
+
+            mean_pair_idr = (idr_1 + idr_2) / 2
+            idr_values.append(mean_pair_idr)
+
+        mean_idr = np.mean(idr_values)
+        mean_idr_values.append(mean_idr)
+        rmsd_values.append(rmsd)
+
+    plot.figure()
+
+    plot.scatter(mean_idr_values, rmsd_values, s=40)
+
+    plot.xlabel("Mean IDR")
+    plot.ylabel("RMSD")
+    plot.title("RMSD vs Mean IDR")
+
+    plot.tight_layout()
+    plot.show()
+
+
 def connect_projected_points(xs_1: list, ys_1: list, xs_2: list, ys_2: list,
                              paired_indices: list):
     for pair in paired_indices:
@@ -294,11 +400,11 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
     points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
     points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
 
-    seqres_1 = read_seqres('seqres_all.txt', name_1)
-    seqres_2 = read_seqres('seqres_all.txt', name_2)
+    seqres_1 = read_seqres(r'C:\Users\User\Documents\bioinf\smtb\seqres_all.txt', name_1)
+    seqres_2 = read_seqres(r'C:\Users\User\Documents\bioinf\smtb\seqres_all.txt', name_2)
 
-    aiupred_1 = read_aiupred('AIUPred_all.txt', name_1)
-    aiupred_2 = read_aiupred('AIUPred_all.txt', name_2)
+    aiupred_1 = read_aiupred(r'C:\Users\User\Documents\bioinf\smtb\AIUPred_all.txt', name_1)
+    aiupred_2 = read_aiupred(r'C:\Users\User\Documents\bioinf\smtb\AIUPred_all.txt', name_2)
 
     IDR_1 = select_atomseq_idr(seqres_1, seq_1, aiupred_1)
     IDR_2 = select_atomseq_idr(seqres_2, seq_2, aiupred_2)
@@ -322,6 +428,15 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
 
     paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
 
+    results = get_window_rmsd(seq_1_aligned, seq_2_aligned, points_1, points_2, 10)
+
+    print("\nRMSD для рамок:")
+
+    for frame, rmsd in results.items():
+        print(f"{frame}: {rmsd}")
+
+    plot_rmsd_vs_mean_idr(results, IDR_1, IDR_2)
+
     points_2 = best_rmsd_transform(points_1, points_2, paired_indices[-10:])
 
     #plane_basis = get_plane_basis(points_1, points_2, paired_indices[:])
@@ -340,16 +455,16 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
     IDR_1_value = min(IDR_1[:]) + a * (max(IDR_1[:]) - min(IDR_1[:]))
     IDR_2_value = min(IDR_2[:]) + a * (max(IDR_2[:]) - min(IDR_2[:]))
 
-    show_points_matplotlib(points_1, color_1, name_1, IDR_1, IDR_1_value,
-                           points_2, color_2, name_2, IDR_2, IDR_2_value)
+    #show_points_matplotlib(points_1, color_1, name_1, IDR_1, IDR_1_value,
+                           #points_2, color_2, name_2, IDR_2, IDR_2_value)
 
 
-name_1 = '9fh3'
+name_1 = '21fb'
 name_2 = '7f29'
 extension_1 = ''
 extension_2 = ''
 
-folder = Path('amyloid_structures/')
+folder = Path(r'C:\Users\User\Documents\bioinf\smtb\records')
 for file in folder.iterdir():
     if file.is_file() and file.name[:4] == name_1:
         extension_1 = file.name[4:8]
@@ -357,10 +472,10 @@ for file in folder.iterdir():
         extension_2 = file.name[4:8]
 
 
-draw_aligned_records('records/' + name_1 + extension_1 + '_records.txt',
+draw_aligned_records(r'C:\Users\User\Documents\bioinf\smtb\records\\' + name_1 + extension_1 + '_records.txt',
                      '#f4acb7',
                      name_1 + extension_1,
-                     'records/' + name_2 + extension_2 + '_records.txt',
+                     r'C:\Users\User\Documents\bioinf\smtb\records\\' + name_2 + extension_2 + '_records.txt',
                      '#669bbc',
                      name_2 + extension_2)
 
