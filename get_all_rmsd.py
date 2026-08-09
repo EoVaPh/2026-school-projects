@@ -4,7 +4,10 @@ import numpy as np
 from contextlib import redirect_stdout
 from io import StringIO
 
-from draw_amyloid_function import best_rmsd_transform, read_records, get_aligned_indices, align_records, read_aiupred, read_seqres, select_atomseq_idr
+from draw_amyloid_function import (
+    best_rmsd_transform, read_records, get_aligned_indices, align_records,
+    read_aiupred, read_seqres, select_atomseq_idr
+)
 
 
 def calculate_rmsd(points_1: list, points_2: list, pairs: list) -> list:
@@ -12,7 +15,7 @@ def calculate_rmsd(points_1: list, points_2: list, pairs: list) -> list:
     squared_distances = []
 
     for p1, p2 in zip(points_1, transformed_points_2):
-        distance_squared = np.sum((np.array(p1) - np.array(p2)) ** 2)
+        distance_squared = np.sum((np.array(p1) - np.array(p2))**2)
         squared_distances.append(distance_squared)
 
     rmsd = np.sqrt(np.mean(squared_distances))
@@ -24,7 +27,7 @@ def read_families(file_path: Path) -> dict:
     families = {}
     current_family = None
 
-    with open(file_path, "r", encoding="utf8") as file:
+    with open(file_path, 'r', encoding='utf8') as file:
         for line in file:
             line = line.strip()
 
@@ -61,7 +64,7 @@ for family_name, structures in families.items():
 
         for name_1, name_2 in pairs:
             count += 1
-            print(f'{name_1}_{name_2}', count, '/', len(pairs))
+            print(f'{name_1} {name_2}', count, '/', len(pairs))
 
             extension_1 = ''
             extension_2 = ''
@@ -91,7 +94,7 @@ for family_name, structures in families.items():
                 except Exception as error:
                     print(f"ERROR: {name_1} - {name_2}: {error}")
 
-            file.write(f'{name_1}_{name_2}: {rmsd:.3f}\n')
+            file.write(f'{name_1} {name_2} {rmsd:.3f}\n')
 
 file.close()
 
