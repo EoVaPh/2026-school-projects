@@ -42,6 +42,7 @@ def read_families(file_path: Path) -> dict:
 
 families = read_families('families.txt')
 
+file = open('all_rmsd.txt', 'w', encoding='utf8')
 
 for family_name, structures in families.items():
     print()
@@ -54,43 +55,44 @@ for family_name, structures in families.items():
     if len(structures) > 1:
         pairs = list(combinations(structures, 2))
 
-        with open('all_rmsd.txt', "w", encoding="utf8") as file:
-            file.write(f'>{family_name}\n')
+        file.write(f'>{family_name}\n')
 
-            count = 0
+        count = 0
 
-            for name_1, name_2 in pairs:
-                count += 1
-                print(f'{name_1}_{name_2}', count, '/', len(pairs))
+        for name_1, name_2 in pairs:
+            count += 1
+            print(f'{name_1}_{name_2}', count, '/', len(pairs))
 
-                extension_1 = ''
-                extension_2 = ''
+            extension_1 = ''
+            extension_2 = ''
 
-                folder = Path('records')
-                for record_file in folder.iterdir():
-                    if record_file.is_file() and record_file.name[:4] == name_1:
-                        extension_1 = record_file.name[4:8]
-                    if record_file.is_file() and record_file.name[:4] == name_2:
-                        extension_2 = record_file.name[4:8]
+            folder = Path('records')
+            for record_file in folder.iterdir():
+                if record_file.is_file() and record_file.name[:4] == name_1:
+                    extension_1 = record_file.name[4:8]
+                if record_file.is_file() and record_file.name[:4] == name_2:
+                    extension_2 = record_file.name[4:8]
 
-                records_file_path_1 = Path('records/' + name_1 + extension_1 + '_records.txt')
-                records_file_path_2 = Path('records/' + name_2 + extension_2 + '_records.txt')
+            records_file_path_1 = Path('records/' + name_1 + extension_1 + '_records.txt')
+            records_file_path_2 = Path('records/' + name_2 + extension_2 + '_records.txt')
 
-                with redirect_stdout(StringIO()):
-                    try:
-                        points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
-                        points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
+            with redirect_stdout(StringIO()):
+                try:
+                    points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
+                    points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
 
-                        seq_1_aligned, seq_2_aligned = align_records(records_file_path_1,
-                                                                        records_file_path_2)
+                    seq_1_aligned, seq_2_aligned = align_records(records_file_path_1,
+                                                                    records_file_path_2)
 
-                        paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
+                    paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
 
-                        rmsd = calculate_rmsd(points_1, points_2, paired_indices)
+                    rmsd = calculate_rmsd(points_1, points_2, paired_indices)
 
-                    except Exception as error:
-                        print(f"ERROR: {name_1} - {name_2}: {error}")
+                except Exception as error:
+                    print(f"ERROR: {name_1} - {name_2}: {error}")
 
-                file.write(f'{name_1}_{name_2}: {rmsd:.3f}\n')
+            file.write(f'{name_1}_{name_2}: {rmsd:.3f}\n')
+
+file.close()
 
 print('Completed')
