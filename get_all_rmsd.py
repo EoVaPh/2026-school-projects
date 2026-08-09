@@ -55,7 +55,7 @@ for family_name, structures in families.items():
     if len(structures) > 1:
         pairs = list(combinations(structures, 2))
 
-        file.write(f'>{family_name}\n')
+        file.write(f'{family_name}\n')
 
         count = 0
 
