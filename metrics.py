@@ -499,7 +499,7 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
     paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
 
     print('I want to call LDDT.')
-    results = get_window_lddt(seq_1_aligned, seq_2_aligned, points_1, points_2, WINDOW_SIZE)
+    results = get_window_rmsd(seq_1_aligned, seq_2_aligned, points_1, points_2, WINDOW_SIZE)
 
     print("\nRMSD для рамок:")
 
@@ -530,89 +530,114 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
                            #points_2, color_2, name_2, IDR_2, IDR_2_value)
 
 
-def read_structure_names(file_path: Path) -> list[str]:
+def read_structure_names(file_path: Path, family: list) -> list[str]:
     """Read structure names, one name per line."""
+
+    family_set = set(family)
 
     with open(file_path, "r", encoding="utf8") as file:
         lines = file.readlines()
 
-    structure_names = [line.strip() for line in lines[177:197]]
+    #structure_names = [line.strip() for line in lines[1:28]]
+    structure_names = []
 
-    print(structure_names)
+    for line in lines:
+        if line.strip() in family_set:
+            structure_names.append(line.strip())
+
+    #print(structure_names)
     return structure_names
 
-#structure_names = read_structure_names('families.txt')
-structure_names = read_structure_names('families_representatives.txt')
-if '9wap' in structure_names:
-    structure_names.remove('9wap')
 
-all_mean_idr = []
-all_rmsd = []
-WINDOW_SIZE = 12
-OUTPUT_FILE = Path("figures/rmsd_vs_mean_idr_all_pairs_tau.png")
+families = []
+families_representatives_file = open('families_representatives.txt', 'r')
+lines = families_representatives_file.readlines()
+families_representatives_file.close()
 
-for name_1, name_2 in combinations(structure_names, 2):
-    print(name_1, name_2)
+for line in lines:
+    if '>' in line:
+        families.append([])
+    else:
+        families[-1].append(line.strip())
 
-    extension_1 = ''
-    extension_2 = ''
+family_number = 0
 
-    folder = Path('records')
-    for file in folder.iterdir():
-        if file.is_file() and file.name[:4] == name_1:
-            extension_1 = file.name[4:8]
-        if file.is_file() and file.name[:4] == name_2:
-            extension_2 = file.name[4:8]
-
-    records_file_path_1 = Path('records/' + name_1 + extension_1 + '_records.txt')
-    records_file_path_2 = Path('records/' + name_2 + extension_2 + '_records.txt')
-
-    points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
-    points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
-
-    seqres_1 = read_seqres('seqres_all.txt', name_1 + extension_1)
-    seqres_2 = read_seqres('seqres_all.txt', name_2 + extension_2)
-
-    aiupred_1 = read_aiupred('AIUPred_all.txt', name_1 + extension_1)
-    aiupred_2 = read_aiupred('AIUPred_all.txt', name_2 + extension_2)
-
-    IDR_1 = select_atomseq_idr(seqres_1, seq_1, aiupred_1)
-    IDR_2 = select_atomseq_idr(seqres_2, seq_2, aiupred_2)
-
-    try:
-        seq_1_aligned, seq_2_aligned = align_records(records_file_path_1,
-                                                     records_file_path_2)
-    except:
-        mean_idr_values = []
-        rmsd_values = []
+for family in families[1:]:
+    if len(family) < 4:
         continue
 
-    paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
+    family_number += 1
 
-    results = get_window_lddt(seq_1_aligned, seq_2_aligned,
-                              points_1, points_2, WINDOW_SIZE)
+    structure_names = read_structure_names('families_representatives.txt',
+                                            family)
+    if '9wap' in structure_names:
+        structure_names.remove('9wap')
 
-    mean_idr_values, rmsd_values = plot_rmsd_vs_mean_idr(results,
-                                                         IDR_1, IDR_2)
-    #except:
-    #print('I failed.')
+    all_mean_idr = []
+    all_rmsd = []
+    WINDOW_SIZE = 10
+    OUTPUT_FILE = Path('figures/' + str(family_number) + '.png')
 
-    all_mean_idr.extend(mean_idr_values)
-    all_rmsd.extend(rmsd_values)
+    for name_1, name_2 in combinations(structure_names, 2):
+        print(name_1, name_2)
 
-plot.figure()
+        extension_1 = ''
+        extension_2 = ''
 
-plot.scatter(
-    all_mean_idr,
-    all_rmsd,
-    s=40,
-    alpha=0.1,
-    color='#005f73',
-)
+        folder = Path('records')
+        for file in folder.iterdir():
+            if file.is_file() and file.name[:4] == name_1:
+                extension_1 = file.name[4:8]
+            if file.is_file() and file.name[:4] == name_2:
+                extension_2 = file.name[4:8]
+
+        records_file_path_1 = Path('records/' + name_1 + extension_1 + '_records.txt')
+        records_file_path_2 = Path('records/' + name_2 + extension_2 + '_records.txt')
+
+        points_1, seq_1, res_ids_1 = read_records(records_file_path_1)
+        points_2, seq_2, res_ids_2 = read_records(records_file_path_2)
+
+        seqres_1 = read_seqres('seqres_all.txt', name_1 + extension_1)
+        seqres_2 = read_seqres('seqres_all.txt', name_2 + extension_2)
+
+        aiupred_1 = read_aiupred('AIUPred_all.txt', name_1 + extension_1)
+        aiupred_2 = read_aiupred('AIUPred_all.txt', name_2 + extension_2)
+
+        IDR_1 = select_atomseq_idr(seqres_1, seq_1, aiupred_1)
+        IDR_2 = select_atomseq_idr(seqres_2, seq_2, aiupred_2)
+
+        try:
+            seq_1_aligned, seq_2_aligned = align_records(records_file_path_1,
+                                                         records_file_path_2)
+        except:
+            mean_idr_values = []
+            rmsd_values = []
+            continue
+
+        paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
+
+        results = get_window_rmsd(seq_1_aligned, seq_2_aligned,
+                                  points_1, points_2, WINDOW_SIZE)
+
+        mean_idr_values, rmsd_values = plot_rmsd_vs_mean_idr(results,
+                                                             IDR_1, IDR_2)
+
+        all_mean_idr.extend(mean_idr_values)
+        all_rmsd.extend(rmsd_values)
+
+    plot.figure()
+
+    plot.scatter(
+        all_mean_idr,
+        all_rmsd,
+        s=40,
+        alpha=0.1,
+        color='#005f73',
+    )
 
 #plot.hist2d(all_mean_idr, all_rmsd, bins=30, cmap='Blues')
 
-num_bins = 20   # desired number of bins
+#num_bins = 20   # desired number of bins
 
 # 1. Bin edges and digitize
 #bin_edges = np.linspace(min(all_mean_idr), max(all_mean_idr), num_bins + 1)
@@ -628,24 +653,24 @@ num_bins = 20   # desired number of bins
 # 3. Plot
 #plot.bar(bin_edges[:-1], y_means, width=np.diff(bin_edges), align='edge', edgecolor='black', color='#669bbc')
 
-plot.xlabel("Maximal IDR")
-plot.ylabel("RMSD")
-plot.title(
-    f"RMSD vs Mean IDR, window size = {WINDOW_SIZE}"
-)
+    plot.xlabel("Mean IDR")
+    plot.ylabel("RMSD")
+    plot.title(
+        f"LDDT vs Mean IDR, window size = {WINDOW_SIZE}"
+    )
 
-plot.tight_layout()
+    plot.tight_layout()
 
-OUTPUT_FILE.parent.mkdir(
-    parents=True,
-    exist_ok=True
-)
+    OUTPUT_FILE.parent.mkdir(
+        parents=True,
+        exist_ok=True
+    )
 
-plot.savefig(
-    OUTPUT_FILE,
-    dpi=300
-)
+    plot.savefig(
+        OUTPUT_FILE,
+        dpi=300
+    )
 
-plot.close()
+    plot.close()
 
 print("Completed")
