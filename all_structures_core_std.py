@@ -32,6 +32,23 @@ def read_records(records_file_path: str):
     return points, seq, res_ids
 
 
+from pathlib import Path
+
+
+def find_records_file(records_folder, structure_name):
+
+    records_folder = Path(records_folder)
+
+    structure_id = Path(structure_name).stem
+
+    for file_path in records_folder.glob("*.txt"):
+
+        if file_path.name.startswith(structure_id):
+            return file_path
+
+    return None
+
+
 def get_family_structure_names(filename: Path) -> list:
 
     structure_names = []
@@ -178,7 +195,7 @@ def calculate_cos_std(phi_angles):
     return std_values
 
 
-def plot_structure_with_core(structure_name, alignment, points, threshold, structure_color, core_size):
+def plot_structure_with_core(structure_name, alignment, points, threshold, structure_color, core_size, output_file):
     """
     Draw one 3D protein structure.
 
@@ -212,27 +229,67 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
     )
 
 
-    if core_points:
+    # --------------------------------------------------------
+    # Core
+    # --------------------------------------------------------
 
-        core_points = np.asarray(core_points, dtype=float)
-        std_values = np.asarray(std_cos_phi, dtype=float)
-        norm = plot.Normalize(vmin=np.nanmin(std_values), vmax=np.nanmax(std_values))
-        cmap = cmap = LinearSegmentedColormap.from_list("std_gradient", ["#65c459", "#d0d95b", "#db6161"])
-        colors = cmap(norm(std_values))
+    if len(core_points) > 0:
+
+        core_points = np.asarray(
+            core_points,
+            dtype=float
+        )
+
+        std_values = np.asarray(
+            std_cos_phi,
+            dtype=float
+        )
+
+        # Remove residues without STD
+        valid = ~np.isnan(std_values)
+
+        valid_core_points = core_points[valid]
+        valid_std_values = std_values[valid]
+
+        # Normalize STD
+        norm = plot.Normalize(
+            vmin=np.min(valid_std_values),
+            vmax=np.max(valid_std_values)
+        )
+
+        # Green -> yellow -> red
+        cmap = LinearSegmentedColormap.from_list("std_gradient", ["#65c459", "#d0d95b", "#db6161"])
+
+        colors = cmap(
+            norm(valid_std_values)
+        )
 
         ax.scatter(
-            core_points[:, 0],
-            core_points[:, 1],
-            core_points[:, 2],
+            valid_core_points[:, 0],
+            valid_core_points[:, 1],
+            valid_core_points[:, 2],
             c=colors,
             s=core_size,
             depthshade=False
         )
-    
-        sm = plot.cm.ScalarMappable(cmap=cmap, norm=norm)
+
+        # Colorbar
+        sm = plot.cm.ScalarMappable(
+            cmap=cmap,
+            norm=norm
+        )
+
         sm.set_array([])
-        cbar = fig.colorbar(sm, ax=ax, pad=0.1)
-        cbar.set_label("STD of cos(φ)")
+
+        cbar = fig.colorbar(
+            sm,
+            ax=ax,
+            pad=0.1
+        )
+
+        cbar.set_label(
+            "STD of cos(φ)"
+        )
 
 
     structure_legend = Line2D([0],
@@ -269,32 +326,69 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
     ax.set_zlabel("")
 
     ax.view_init(
-        elev=30,
-        azim=45,
-        roll=15
+        elev=90,
+        azim=0,
+        roll=0
     )
 
     plot.tight_layout()
 
-    plot.show()
+    if output_file is not None:
+        plot.savefig(
+            output_file,
+            dpi=300,
+            bbox_inches="tight"
+        )
+
+    plot.close()
+
+
+def plot_all_structures(structure_names, alignment, records_folder, output_folder, threshold, structure_color, core_size):
+
+    records_folder = Path(records_folder)
+    output_folder = Path(output_folder)
+    output_folder.mkdir(parents=True, exist_ok=True)
+
+    for structure_name in structure_names:
+
+        print(f"Processing {structure_name}")
+
+        records_file = find_records_file(records_folder, structure_name)
+
+        if records_file is None:
+            print(
+                f"WARNING: records for "
+                f"{structure_name} not found"
+            )
+            continue
+
+        points, seq, res_ids = read_records(records_file)
+
+        plot_structure_with_core(
+            structure_name=structure_name,
+            alignment=alignment,
+            points=points,
+            threshold=threshold,
+            structure_color=structure_color,
+            core_size=core_size,
+            output_file=output_folder / f"{Path(structure_name).stem}_core.png"
+        )
 
 
 
-#structure_names = get_family_structure_names(alignment_file)
 
 alignment_file = Path("MAFFT_families_atomseq_multiple_alignment\\family_004_aligned.txt")
+records_folder = Path("records")
 angles_file = Path("all_phi_psi.txt")
-input_file = "records/8ons.pdb_records.txt"
 
-points, seq, res_ids = read_records(input_file)
+structure_names = get_family_structure_names(alignment_file)
 alignment = read_alignment(alignment_file)
 
-
-plot_structure_with_core(
-    structure_name="8ons.pdb",
+plot_all_structures(
+structure_names=structure_names,
     alignment=alignment,
-    points=points,
-    threshold=0.875,
-    structure_color= '#669bbc',
-    core_size=20
-)
+    records_folder="records",
+    output_folder="familiy004_cores_1_std",
+    threshold=1.0,
+    structure_color='#669bbc',
+    core_size=20)
