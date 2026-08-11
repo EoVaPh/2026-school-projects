@@ -1,0 +1,391 @@
+from pathlib import Path
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+alignment_file = Path("MAFFT_families_atomseq_multiple_alignment\\family_025_aligned.txt")
+angles_file = Path("all_phi_psi.txt")
+
+
+def read_alignment(filename: Path) -> list:
+    """Read alignment in format:
+
+    PDB ID  ----AAAAAAA...
+    PDB ID  -----AAAAAA...
+
+    """
+
+    alignment = []
+
+    with open(filename, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            parts = line.split(maxsplit=1)
+
+            if len(parts) != 2:
+                continue
+
+            structure_id = parts[0]
+            sequence = parts[1]
+
+            alignment.append((structure_id, sequence))
+
+    return alignment
+
+
+def read_angles(alignment: list, filename: Path) -> dict:
+    """Read angle file:
+
+    >PDB ID
+    chain   number  aminoacid   phi psi
+
+    """
+
+
+    needed_structures = {structure_id for structure_id, _ in alignment}
+
+    angles = {}
+
+    current_structure = None
+
+    with open(filename, "r", encoding="utf-8") as f:
+
+        for line in f:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            if line.endswith((".pdb", ".cif")):
+
+                current_structure = (
+                    line.lstrip("> ").strip()
+                )
+
+                if current_structure in needed_structures:
+                    angles[current_structure] = {}
+
+                continue
+
+            if current_structure not in needed_structures:
+                continue
+
+            parts = line.split()
+
+            if len(parts) != 5:
+                continue
+
+            chain = parts[0]
+            residue_number = int(parts[1])
+            aa = parts[2]
+
+            phi = (None if parts[3] == "None" else float(parts[3]))
+
+            psi = (None if parts[4] == "None" else float(parts[4]))
+
+            angles[current_structure][residue_number] = {
+                "chain": chain,
+                "aa": aa,
+                "phi": phi,
+                "psi": psi
+            }
+
+    return angles
+
+
+def make_residue_mapping(sequence, structure_angles):
+    """
+    Map alignment positions to residue numbers.
+
+    A gap gets None and does not consume a residue number.
+    """
+
+    residue_numbers = sorted(
+        structure_angles.keys()
+    )
+
+    mapping = {}
+
+    residue_index = 0
+
+    for alignment_position, aa in enumerate(sequence):
+
+        # Gap: no residue exists at this position
+        if aa == "-":
+            mapping[alignment_position] = None
+            continue
+
+        # No more residues in the structure
+        if residue_index >= len(residue_numbers):
+            mapping[alignment_position] = None
+            continue
+
+        mapping[alignment_position] = (
+            residue_numbers[residue_index]
+        )
+
+        residue_index += 1
+
+    return mapping
+
+
+def find_core(alignment, threshold=0.875):
+    """Find the longest continuous alignment region where
+    at least `threshold` of sequences contain a residue.
+
+    Gaps are allowed if their fraction does not exceed
+    (1 - threshold)."""
+
+    if not alignment:
+        return []
+
+    alignment_length = len(alignment[0][1])
+    number_of_sequences = len(alignment)
+
+    best_start = None
+    best_end = None
+    best_length = 0
+
+    current_start = None
+    current_length = 0
+
+    for position in range(alignment_length):
+
+        number_of_residues = sum(
+            sequence[position] != "-"
+            for _, sequence in alignment
+        )
+
+        fraction = (
+            number_of_residues / number_of_sequences
+        )
+
+
+        if fraction >= threshold:
+
+            if current_start is None:
+                current_start = position
+                current_length = 1
+            else:
+                current_length += 1
+
+            if current_length > best_length:
+                best_length = current_length
+                best_start = current_start
+                best_end = position
+
+        else:
+            current_start = None
+            current_length = 0
+
+    if best_start is None:
+        return []
+
+    return list(
+        range(best_start, best_end + 1)
+    )
+
+
+def collect_core_angles(alignment, angles, threshold=0.875):
+    """
+    Find the core and collect phi/psi values.
+
+    A residue missing because of a gap contributes
+    None for both phi and psi.
+
+    Returns
+    -------
+    core : str
+        Core sequence from the first sequence.
+
+    core_phis : list
+        Phi values for every core position.
+
+    core_psis : list
+        Psi values for every core position.
+    """
+
+    core_positions = find_core(
+        alignment,
+        threshold=threshold
+    )
+
+    if not core_positions:
+        return "", [], []
+
+    residue_mappings = {}
+
+    for structure_id, sequence in alignment:
+
+        if structure_id not in angles:
+            continue
+
+        residue_mappings[structure_id] = (
+            make_residue_mapping(
+                sequence,
+                angles[structure_id]
+            )
+        )
+
+    core_phis = []
+    core_psis = []
+
+    reference_sequence = alignment[0][1]
+
+    core = "".join(
+        reference_sequence[position]
+        for position in core_positions
+    )
+
+    for position in core_positions:
+
+        phis = []
+        psis = []
+
+        for structure_id, sequence in alignment:
+
+            if structure_id not in residue_mappings:
+                continue
+
+            mapping = residue_mappings[structure_id]
+
+            # Gap in this particular sequence
+            if position not in mapping:
+                phis.append(None)
+                psis.append(None)
+                continue
+
+            residue_number = mapping[position]
+
+            # Gap was explicitly mapped to None
+            if residue_number is None:
+                phis.append(None)
+                psis.append(None)
+                continue
+
+            data = angles[structure_id].get(
+                residue_number
+            )
+
+            # Residue number not found in angle data
+            if data is None:
+                phis.append(None)
+                psis.append(None)
+                continue
+
+            phis.append(data["phi"])
+            psis.append(data["psi"])
+
+        core_phis.append(phis)
+        core_psis.append(psis)
+
+    return core, core_phis, core_psis
+
+
+def plot_scatter(data, positions, ylabel, title, filename):
+    
+    plt.figure(figsize=(16, 6))
+
+    for position, values in enumerate(data):
+
+        plt.axvline(
+            position,
+            color="lightgray",
+            alpha=0.6,
+            linewidth=0.8
+        )
+
+        positive = [value for value in values if value > 0]
+        negative = [value for value in values if value < 0]
+        zero = [value for value in values if value == 0]
+
+        plt.scatter(
+            [position] * len(negative),
+            negative,
+            color="steelblue",
+            s=20
+        )
+        plt.scatter(
+            [position] * len(positive),
+            positive,
+            color="seagreen",
+            s=20
+        )
+        plt.scatter(
+            [position] * len(zero),
+            zero,
+            color="black",
+            s=20
+        )
+
+
+    plt.xlabel("Residue number in core")
+    plt.ylabel(ylabel)
+    plt.title(title)
+
+    plt.xticks(positions, rotation=90)
+    plt.ylim(-1.05, 1.05)
+
+    plt.tight_layout()
+    plt.savefig(
+        filename,
+        dpi=300,
+        bbox_inches="tight"
+    )
+
+    plt.show()
+    plt.close()
+
+
+
+
+alignment = read_alignment(alignment_file)
+
+angles = read_angles(alignment, angles_file)
+
+core, core_phis, core_psis = collect_core_angles(alignment, angles)
+
+print("core =", core)
+
+
+
+
+""" core_cos_phis = [[np.cos(phi) for phi in phis] for phis in core_phis]
+core_cos_psis = [[np.cos(psi) for psi in psis] for psis in core_psis]
+core_sin_phis = [[np.sin(phi) for phi in phis] for phis in core_phis]
+core_sin_psis = [[np.sin(psi) for psi in psis] for psis in core_psis]
+
+positions = np.arange(len(core))
+
+plot_scatter(
+    core_cos_phis,
+    positions,
+    "cos(φ)",
+    "cos(φ) angles in the core",
+    "core_phi_cos.png"
+)
+plot_scatter(
+    core_cos_psis,
+    positions,
+    "cos(ψ)",
+    "cos(ψ) angles in the core",
+    "core_psi_cos.png"
+)
+plot_scatter(
+    core_sin_phis,
+    positions,
+    "sin(φ)",
+    "sin(φ) angles in the core",
+    "core_phi_sin.png"
+)
+plot_scatter(
+    core_sin_psis,
+    positions,
+    "sin(ψ)",
+    "sin(ψ) angles in the core",
+    "core_psi_sin.png"
+) """
