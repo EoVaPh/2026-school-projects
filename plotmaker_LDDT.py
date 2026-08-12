@@ -28,7 +28,7 @@ def parse_family_file(file_path):
                 if not parts:
                     continue
                 try:
-                    value = float(parts[-1])
+                    value = 1-float(parts[-1])
                     families[current_family].append(value)
                 except ValueError:
                     continue
