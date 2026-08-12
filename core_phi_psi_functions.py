@@ -305,9 +305,31 @@ def collect_core_angles(alignment, angles, threshold=0.875):
     return core, core_phis, core_psis
 
 
+def calculate_cos_std(phi_angles):
+    
+    std_values = []
+
+    for angles in phi_angles:
+        angles = np.asarray(angles, dtype=float)
+        angles = angles[~np.isnan(angles)]
+
+        if len(angles) == 0:
+            std_values.append(np.nan)
+            continue
+
+        cos_values = np.cos(angles)
+        std = np.std(cos_values)
+        std_values.append(std)
+
+    return std_values
+
+
 def plot_scatter(data, positions, ylabel, title, filename):
     
     plt.figure(figsize=(16, 6))
+
+    rng = np.random.default_rng(42)
+    jitter_width = 0.15
 
     for position, values in enumerate(data):
 
@@ -322,25 +344,53 @@ def plot_scatter(data, positions, ylabel, title, filename):
         negative = [value for value in values if value < 0]
         zero = [value for value in values if value == 0]
 
+        negative_x = (
+            position
+            + rng.uniform(
+                -jitter_width,
+                jitter_width,
+                len(negative)
+            )
+        )
+
         plt.scatter(
-            [position] * len(negative),
+            negative_x,
             negative,
-            color="steelblue",
+            color="#496acf",
             s=20
         )
+
+        positive_x = (
+            position
+            + rng.uniform(
+                -jitter_width,
+                jitter_width,
+                len(positive)
+            )
+        )
+
         plt.scatter(
-            [position] * len(positive),
+            positive_x,
             positive,
-            color="seagreen",
+            color="#58C35D",
             s=20
         )
+
+        zero_x = (
+            position
+            + rng.uniform(
+                -jitter_width,
+                jitter_width,
+                len(zero)
+            )
+        )
+
         plt.scatter(
-            [position] * len(zero),
+            zero_x,
             zero,
             color="black",
             s=20
         )
-
 
     plt.xlabel("Residue number in core")
     plt.ylabel(ylabel)
@@ -356,5 +406,4 @@ def plot_scatter(data, positions, ylabel, title, filename):
         bbox_inches="tight"
     )
 
-    plt.show()
     plt.close()
