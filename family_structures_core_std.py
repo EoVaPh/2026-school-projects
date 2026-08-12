@@ -92,8 +92,6 @@ def draw_structure(points, name, color, sphere_size=20):
 
     fig = plot.figure()
     ax = fig.add_subplot(111, projection='3d')
-
-    # Structure
     x, y, z = zip(*points)
 
     ax.plot(
@@ -105,10 +103,6 @@ def draw_structure(points, name, color, sphere_size=20):
         label=name
     )
 
-    # Spheres
-    #ax.scatter(x, y, z, color=color, s=sphere_size, depthshade=True)
-
-    # Remove axes labels and ticks
     ax.set_xlabel("")
     ax.set_ylabel("")
     ax.set_zlabel("")
@@ -119,7 +113,6 @@ def draw_structure(points, name, color, sphere_size=20):
 
     ax.legend(fontsize=8)
 
-    # Same view as original code
     ax.view_init(
         elev=30,
         azim=45,
@@ -152,44 +145,24 @@ def get_core_points(alignment, core_positions, structure_name, points):
     core_residues = []
     core_alignment_positions = []
 
-    # Index in the original structure.
-    # It increases only when we encounter a real residue.
     residue_index = 0
 
     for alignment_position, aa in enumerate(sequence):
 
-        # Gap in THIS structure.
-        # It has no coordinate and no amino-acid label.
         if aa == "-":
             continue
 
-        # This position belongs to the family-wide core
         if alignment_position in core_positions:
 
             if residue_index < len(points):
 
-                core_points.append(
-                    points[residue_index]
-                )
-
-                # IMPORTANT:
-                # Take the amino acid from THIS structure's
-                # alignment sequence.
+                core_points.append(points[residue_index])
                 core_residues.append(aa)
-
-                # Save the alignment position so that
-                # phi/psi statistics can be matched correctly.
-                core_alignment_positions.append(
-                    alignment_position
-                )
+                core_alignment_positions.append(alignment_position)
 
         residue_index += 1
 
-    return (
-        core_points,
-        core_residues,
-        core_alignment_positions
-    )
+    return (core_points, core_residues, core_alignment_positions)
 
 
 def calculate_cos_std(phi_angles):
