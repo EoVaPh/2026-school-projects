@@ -17,15 +17,7 @@ def process_family(alignment_file, angles_file, records_folder, output_folder, t
     as a separate PNG image.
     """
 
-    # ---------------------------------------------------------
-    # Read alignment
-    # ---------------------------------------------------------
-
     alignment = read_alignment(alignment_file)
-
-    # ---------------------------------------------------------
-    # Get structure names from the alignment
-    # ---------------------------------------------------------
 
     structure_names = get_family_structure_names(alignment_file)
 
@@ -36,92 +28,47 @@ def process_family(alignment_file, angles_file, records_folder, output_folder, t
         )
         return """
 
-    # ---------------------------------------------------------
-    # Create output folder for this family
-    # ---------------------------------------------------------
-
     family_name = alignment_file.stem
 
-    family_output_folder = (
-        output_folder / family_name
-    )
+    family_output_folder = (output_folder / family_name)
+    family_output_folder.mkdir(parents=True, exist_ok=True)
 
-    family_output_folder.mkdir(
-        parents=True,
-        exist_ok=True
-    )
-
-    # ---------------------------------------------------------
     # First structure = reference
-    # ---------------------------------------------------------
-
     structure_name_1 = structure_names[0]
 
-    input_file_1 = (
-        records_folder /
+    input_file_1 = (records_folder /
         f"{structure_name_1}_records.txt"
     )
 
     if not input_file_1.exists():
-        print(
-            f"Records file not found: {input_file_1}"
-        )
+        print(f"Records file not found: {input_file_1}")
         return
 
-    points_1, seq_1, res_ids_1 = read_records(
-        input_file_1
-    )
+    points_1, seq_1, res_ids_1 = read_records(input_file_1)
 
-    # ---------------------------------------------------------
     # Process all other structures
-    # ---------------------------------------------------------
-
     for structure_name_2 in structure_names:
 
         print()
         print("=" * 60)
-        print(
-            f"Family: {family_name}"
-        )
-        print(
-            f"Reference: {structure_name_1}"
-        )
-        print(
-            f"Structure: {structure_name_2}"
-        )
+        print(f"Family: {family_name}")
+        print(f"Reference: {structure_name_1}")
+        print(f"Structure: {structure_name_2}")
         print("=" * 60)
 
-        input_file_2 = (
-            records_folder /
+        input_file_2 = (records_folder /
             f"{structure_name_2}_records.txt"
         )
 
         if not input_file_2.exists():
-            print(
-                f"Records file not found: {input_file_2}"
-            )
+            print(f"Records file not found: {input_file_2}")
             continue
 
-        # -----------------------------------------------------
-        # Read second structure
-        # -----------------------------------------------------
+        points_2, seq_2, res_ids_2 = read_records(input_file_2)
 
-        points_2, seq_2, res_ids_2 = read_records(
-            input_file_2
-        )
-
-        # -----------------------------------------------------
-        # Output file
-        # -----------------------------------------------------
-
-        save_path = (
-            family_output_folder /
+        save_path = (family_output_folder /
             f"{structure_name_2.replace('.pdb', '')}.png"
         )
-
-        # -----------------------------------------------------
-        # Align and draw
-        # -----------------------------------------------------
 
         try:
 
@@ -141,9 +88,7 @@ def process_family(alignment_file, angles_file, records_folder, output_folder, t
                 save_path=save_path
             )
 
-            print(
-                f"Saved: {save_path}"
-            )
+            print(f"Saved: {save_path}")
 
         except Exception as e:
 
