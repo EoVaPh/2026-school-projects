@@ -383,7 +383,7 @@ plot_all_structures(
 structure_names=structure_names,
     alignment=alignment,
     records_folder="records",
-    output_folder="familiy004_cores_1_std",
+    output_folder="familiy004_cores_0875_std",
     threshold=0.875,
     structure_color='#669bbc',
     core_size=20)
