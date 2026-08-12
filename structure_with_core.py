@@ -121,7 +121,6 @@ def get_core_points(alignment, core_positions, structure_name, points):
     Get coordinates of core residues for one structure.
     """
 
-    # Find the sequence of the selected structure
     sequence = None
 
     for name, aligned_sequence in alignment:
@@ -136,16 +135,21 @@ def get_core_points(alignment, core_positions, structure_name, points):
         )
 
     core_points = []
+    core_residues = []
+    core_alignment_positions = []
 
+    # Index in the original structure.
+    # It increases only when we encounter a real residue.
     residue_index = 0
 
     for alignment_position, aa in enumerate(sequence):
 
-        # Gap does not correspond to a residue
+        # Gap in THIS structure.
+        # It has no coordinate and no amino-acid label.
         if aa == "-":
             continue
 
-        # Current alignment position belongs to core
+        # This position belongs to the family-wide core
         if alignment_position in core_positions:
 
             if residue_index < len(points):
@@ -154,9 +158,24 @@ def get_core_points(alignment, core_positions, structure_name, points):
                     points[residue_index]
                 )
 
+                # IMPORTANT:
+                # Take the amino acid from THIS structure's
+                # alignment sequence.
+                core_residues.append(aa)
+
+                # Save the alignment position so that
+                # phi/psi statistics can be matched correctly.
+                core_alignment_positions.append(
+                    alignment_position
+                )
+
         residue_index += 1
 
-    return core_points
+    return (
+        core_points,
+        core_residues,
+        core_alignment_positions
+    )
 
 
 def calculate_cos_std(phi_angles):
@@ -187,9 +206,10 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
     """
 
     core_positions = find_core(alignment, threshold)
-    core_points = get_core_points(alignment, core_positions, structure_name, points)
+    core_points, core_residues, core_alignment_positions = get_core_points(alignment, core_positions, structure_name, points)
     angles = read_angles(alignment, angles_file)
     core, core_phis, core_psis = (collect_core_angles(alignment, angles, threshold))
+    print(core)
     std_cos_phi = calculate_cos_std(core_phis)
 
     points = np.asarray(points, dtype=float)
@@ -215,7 +235,8 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
     if core_points:
 
         core_points = np.asarray(core_points, dtype=float)
-        std_values = np.asarray(std_cos_phi, dtype=float)
+        std_by_position = {position: std for position, std in zip(core_positions, std_cos_phi)}
+        std_values = np.asarray([std_by_position[position] for position in core_alignment_positions], dtype=float)
         norm = plot.Normalize(vmin=np.nanmin(std_values), vmax=np.nanmax(std_values))
         cmap = cmap = LinearSegmentedColormap.from_list("std_gradient", ["#65c459", "#d0d95b", "#db6161"])
         colors = cmap(norm(std_values))
@@ -228,6 +249,19 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
             s=core_size,
             depthshade=False
         )
+
+        for point, aa in zip(core_points, core_residues):
+
+            x, y, z = point
+
+            ax.text(
+                x,
+                y,
+                z,
+                aa,
+                fontsize=4,
+                fontweight="normal"
+            )
     
         sm = plot.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
@@ -284,14 +318,14 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
 
 alignment_file = Path("MAFFT_families_atomseq_multiple_alignment\\family_004_aligned.txt")
 angles_file = Path("all_phi_psi.txt")
-input_file = "records/8ons.pdb_records.txt"
+input_file = "records/9tke.pdb_records.txt"
 
 points, seq, res_ids = read_records(input_file)
 alignment = read_alignment(alignment_file)
 
 
 plot_structure_with_core(
-    structure_name="8ons.pdb",
+    structure_name="9tke.pdb",
     alignment=alignment,
     points=points,
     threshold=0.875,

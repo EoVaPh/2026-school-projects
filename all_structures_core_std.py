@@ -32,9 +32,6 @@ def read_records(records_file_path: str):
     return points, seq, res_ids
 
 
-from pathlib import Path
-
-
 def find_records_file(records_folder, structure_name):
 
     records_folder = Path(records_folder)
@@ -138,7 +135,6 @@ def get_core_points(alignment, core_positions, structure_name, points):
     Get coordinates of core residues for one structure.
     """
 
-    # Find the sequence of the selected structure
     sequence = None
 
     for name, aligned_sequence in alignment:
@@ -153,16 +149,21 @@ def get_core_points(alignment, core_positions, structure_name, points):
         )
 
     core_points = []
+    core_residues = []
+    core_alignment_positions = []
 
+    # Index in the original structure.
+    # It increases only when we encounter a real residue.
     residue_index = 0
 
     for alignment_position, aa in enumerate(sequence):
 
-        # Gap does not correspond to a residue
+        # Gap in THIS structure.
+        # It has no coordinate and no amino-acid label.
         if aa == "-":
             continue
 
-        # Current alignment position belongs to core
+        # This position belongs to the family-wide core
         if alignment_position in core_positions:
 
             if residue_index < len(points):
@@ -171,9 +172,24 @@ def get_core_points(alignment, core_positions, structure_name, points):
                     points[residue_index]
                 )
 
+                # IMPORTANT:
+                # Take the amino acid from THIS structure's
+                # alignment sequence.
+                core_residues.append(aa)
+
+                # Save the alignment position so that
+                # phi/psi statistics can be matched correctly.
+                core_alignment_positions.append(
+                    alignment_position
+                )
+
         residue_index += 1
 
-    return core_points
+    return (
+        core_points,
+        core_residues,
+        core_alignment_positions
+    )
 
 
 def calculate_cos_std(phi_angles):
@@ -204,7 +220,7 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
     """
 
     core_positions = find_core(alignment, threshold)
-    core_points = get_core_points(alignment, core_positions, structure_name, points)
+    core_points, core_residues, core_alignment_positions = get_core_points(alignment, core_positions, structure_name, points)
     angles = read_angles(alignment, angles_file)
     core, core_phis, core_psis = (collect_core_angles(alignment, angles, threshold))
     std_cos_phi = calculate_cos_std(core_phis)
@@ -228,41 +244,20 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
         alpha=0.7
     )
 
-
-    # --------------------------------------------------------
-    # Core
-    # --------------------------------------------------------
-
     if len(core_points) > 0:
 
-        core_points = np.asarray(
-            core_points,
-            dtype=float
-        )
-
-        std_values = np.asarray(
-            std_cos_phi,
-            dtype=float
-        )
-
-        # Remove residues without STD
+        core_points = np.asarray(core_points, dtype=float)
+        std_by_position = {position: std for position, std in zip(core_positions, std_cos_phi)}
+        std_values = np.asarray([std_by_position[position] for position in core_alignment_positions], dtype=float)
         valid = ~np.isnan(std_values)
 
         valid_core_points = core_points[valid]
         valid_std_values = std_values[valid]
+        norm = plot.Normalize(vmin=np.min(valid_std_values), vmax=np.max(valid_std_values))
 
-        # Normalize STD
-        norm = plot.Normalize(
-            vmin=np.min(valid_std_values),
-            vmax=np.max(valid_std_values)
-        )
-
-        # Green -> yellow -> red
         cmap = LinearSegmentedColormap.from_list("std_gradient", ["#65c459", "#d0d95b", "#db6161"])
 
-        colors = cmap(
-            norm(valid_std_values)
-        )
+        colors = cmap(norm(valid_std_values))
 
         ax.scatter(
             valid_core_points[:, 0],
@@ -273,23 +268,23 @@ def plot_structure_with_core(structure_name, alignment, points, threshold, struc
             depthshade=False
         )
 
-        # Colorbar
-        sm = plot.cm.ScalarMappable(
-            cmap=cmap,
-            norm=norm
-        )
+        for point, aa in zip(core_points, core_residues):
+        
+            x, y, z = point
+        
+            ax.text(
+                    x,
+                    y,
+                    z,
+                    aa,
+                    fontsize=4,
+                    fontweight="normal"
+                )
 
+        sm = plot.cm.ScalarMappable(cmap=cmap, norm=norm)
         sm.set_array([])
-
-        cbar = fig.colorbar(
-            sm,
-            ax=ax,
-            pad=0.1
-        )
-
-        cbar.set_label(
-            "STD of cos(φ)"
-        )
+        cbar = fig.colorbar(sm, ax=ax, pad=0.1)
+        cbar.set_label("STD of cos(φ)")
 
 
     structure_legend = Line2D([0],
@@ -389,6 +384,6 @@ structure_names=structure_names,
     alignment=alignment,
     records_folder="records",
     output_folder="familiy004_cores_1_std",
-    threshold=1.0,
+    threshold=0.875,
     structure_color='#669bbc',
     core_size=20)

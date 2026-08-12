@@ -160,21 +160,23 @@ def find_core(alignment, threshold=0.875):
             number_of_residues / number_of_sequences
         )
 
-        # At least 90% of sequences contain a residue
         if fraction >= threshold:
 
             if current_start is None:
                 current_start = position
                 current_length = 1
+
             else:
                 current_length += 1
 
             if current_length > best_length:
+
                 best_length = current_length
                 best_start = current_start
                 best_end = position
 
         else:
+
             current_start = None
             current_length = 0
 
@@ -204,20 +206,28 @@ def collect_core_angles(alignment, angles, threshold=0.875):
     core_psis : list
         Psi values for every core position.
     """
+    
+    if not alignment:
+        return "", [], []
 
+    # Core is determined once for the entire family
     core_positions = find_core(
         alignment,
-        threshold=threshold
+        threshold
     )
 
     if not core_positions:
         return "", [], []
 
+    # Create residue mappings for all structures
     residue_mappings = {}
 
     for structure_id, sequence in alignment:
 
         if structure_id not in angles:
+            # Keep the structure in the alignment.
+            # Its angles will simply be None.
+            residue_mappings[structure_id] = None
             continue
 
         residue_mappings[structure_id] = (
@@ -227,9 +237,7 @@ def collect_core_angles(alignment, angles, threshold=0.875):
             )
         )
 
-    core_phis = []
-    core_psis = []
-
+    # Core sequence from the first alignment sequence
     reference_sequence = alignment[0][1]
 
     core = "".join(
@@ -237,17 +245,27 @@ def collect_core_angles(alignment, angles, threshold=0.875):
         for position in core_positions
     )
 
+    core_phis = []
+    core_psis = []
+
+    # Process every core alignment position
     for position in core_positions:
 
         phis = []
         psis = []
 
+        # Go through EVERY structure in the family
         for structure_id, sequence in alignment:
 
-            if structure_id not in residue_mappings:
-                continue
+            mapping = residue_mappings.get(
+                structure_id
+            )
 
-            mapping = residue_mappings[structure_id]
+            # No angle data for this structure
+            if mapping is None:
+                phis.append(None)
+                psis.append(None)
+                continue
 
             # Gap in this particular sequence
             if position not in mapping:
@@ -257,24 +275,29 @@ def collect_core_angles(alignment, angles, threshold=0.875):
 
             residue_number = mapping[position]
 
-            # Gap was explicitly mapped to None
+            # Mapping explicitly contains None
             if residue_number is None:
                 phis.append(None)
                 psis.append(None)
                 continue
 
+            # Get phi/psi for this actual residue
             data = angles[structure_id].get(
                 residue_number
             )
 
-            # Residue number not found in angle data
             if data is None:
                 phis.append(None)
                 psis.append(None)
                 continue
 
-            phis.append(data["phi"])
-            psis.append(data["psi"])
+            phis.append(
+                data.get("phi")
+            )
+
+            psis.append(
+                data.get("psi")
+            )
 
         core_phis.append(phis)
         core_psis.append(psis)
