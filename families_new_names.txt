@@ -193,11 +193,6 @@
 9s2b
 9shs
 9tzx
-9b4l
-9b4m
-9b4n
-9b4o
-9pgo
 > amyloid-beta
 21fb
 2beg
@@ -284,19 +279,12 @@
 9riw
 9wao
 9wap
-12gb
-9A8E
-9a8f
-9JAZ
-9JB0
-9JB1
-9JB2
-9M5Q
-9M5R
-9UMH
-9u02
-8gz8
-8gz9
+> tau
+9b4l
+9b4m
+9b4n
+9b4o
+9pgo
 > taf15
 8ons
 9thm
@@ -312,44 +300,27 @@
 9tkl
 9tkz
 9tl2
-> sil-peptides
+> spider-silk
 9kzb
 9KZO
 9L2S
-> glycinin
+> glycinin-a
 9v45
 9v4f
-> lg-light-chain
+> immunoglobulin-light-chain
 9u4u
-6ic3
-9LIV
-9liw
-9v91
-9x45
-7nsl
-9lix
-9liy
-9lj0
-9faa
-9fab
-9fac
-6z1i
-6z1o
-8r47
-9eme
 > fus
 5w3n
 6xfm
 7vqq
-> hnrnp
+> hnrnpa2
 6wqk
 8du2
 8duw
 8ec7
 8teq
 8ter
-7zir
-> dlki-segment
+> insulin-b-chain
 5w7v
 6n37
 6n3a
@@ -366,16 +337,23 @@
 8qxb
 9fof
 9for
-> apolipoproteins
+> hnrnpdl
+7zir
+> apolipoprotein-a-iv
 9hx4
-8oq4
-8oq5
-> alpha-synuclein
+> serum-amyloid-a
 8ore
 9cgx
 9cgz
 9h5g
 9h5j
+> csga
+8c50
+> ubiq-huntingtin
+7bx7
+7zj2
+9gkf
+> alpha-synuclein
 10xu
 2n0a
 6a6b
@@ -568,30 +546,6 @@
 9rzf
 9tpt
 9y0s
-> curli-csga
-8c50
-8enq
-> serum-amyloid
-7bx7
-7zj2
-9gkf
-7vzf
-8ihu
-8ihv
-9iyd
-9iyj
-9jbo
-9jbp
-9li1
-6dso
-6mst
-6zcf
-6zcg
-6zch
-7ovt
-7zh7
-7zky
-9R4Z
 > tmem106b
 7qvc
 7qvf
@@ -620,7 +574,6 @@
 8ote
 8x5h
 9fnb
-9C1U
 > sup35
 9xbk
 9xbl
@@ -628,7 +581,7 @@
 9xbn
 9xbo
 9xbp
-> prions
+> prion
 6lni
 6uur
 7dwv
@@ -645,36 +598,36 @@
 8wzx
 9dmy
 9dmz
-9kty
-9ktz
-2KJ3
-2LBU
-2rnm
-6EKA
-8spa
-> cardiac-amyloid
+> transthyretin
 9pvy
 9pvz
 9pw3
+> immunoglobulin-light-chain
+6ic3
+9LIV
+9liw
+9v91
+9x45
+> tppp-p25alpha
+9j4d
+9j4e
+9j4f
+> transthyretin
 6hud
 8cpe
 9ljc
 9oka
-8g2v
-9non
-> other-amyloid
-9j4d
-9j4e
-9j4f
-9lja
-9ljb
-8qut
-8r4a
-8qv8
-9J0L
-9J0M
-> alpha-crystallin
+> alphaa-crystallin
 9u4l
+> beta2-microglobulin
+7vzf
+8ihu
+8ihv
+9iyd
+9iyj
+9jbo
+9jbp
+9li1
 > alpha-amylase
 9qlu
 > amylin-iapp
@@ -716,7 +669,12 @@
 9gzx
 9gzy
 9ulz
-> cross-beta-motifs
+> immunoglobulin-light-chain
+7nsl
+9lix
+9liy
+9lj0
+> custom-peptides
 2M5N
 6sdz
 7ob4
@@ -747,50 +705,117 @@
 9hyw
 9nnn
 9zld
-2nnt
-> necrosome-rip
+> rip1-rip3-necrosome
 5v7z
 7da4
 7dac
 8z94
-8z93
-9hr6
-9hr9
-6JPD
-8ib0
-> d-nt-peptides
+> csga
+8enq
+> lysozyme
+8g2v
+9non
+> immunoglobulin-light-chain
+9faa
+9fab
+9fac
+> beta2-microglobulin
+9lja
+9ljb
+> lysozyme
+8qut
+8r4a
+> serum-amyloid-a
+6dso
+6mst
+6zcf
+6zcg
+6zch
+7ovt
+7zh7
+7zky
+9R4Z
+> ovalbumin
+8qv8
+9J0L
+9J0M
+> immunoglobulin-light-chain
+6z1i
+6z1o
+8r47
+9eme
+> d2-nt-peptide
 9oyr
 9oyt
-9cww
-9oyo
-9oyq
-9oys
-9oyw
-> unclassified
+> unclassified-amyloid
 8ZLI
-> protofilaments
+> insulin
 2e8d
 6gk3
 8a7o
 8a7p
 8a7q
 8a7t
-> pi3-kinase
+> rip1-rip3-necrosome
+8z93
+9hr6
+9hr9
+> d10-nt-peptide
+9cww
+9oyo
+9oyq
+9oys
+9oyw
+> prion
+9kty
+9ktz
+> pi3-kinase-sh3
 6r4r
+> rip1-rip3-necrosome
+6JPD
+> amyloid-beta
+12gb
+8bfa
+8ot4
+9A8E
+9a8f
+9JAZ
+9JB0
+9JB1
+9JB2
+9M5Q
+9M5R
+9UMH
+> prion
+2KJ3
+2LBU
+2rnm
+> prion
+6EKA
+> apolipoprotein-a-ii
+8oq4
+8oq5
+> tmem106b
+9C1U
 > beta-lactoglobulin
 9iah
 9jhf
 9jhg
 9jhh
 9jhi
-> psm-alpha
+> amyloid-beta
+9u02
+> prion
+8spa
+> phenol-soluble-modulin
 9ATW
+> custom-peptides
+2nnt
 > nup98
 7q64
 7q65
 7q66
 7q67
-8ci8
 > pmel
 9JST
 9JSU
@@ -799,28 +824,35 @@
 9JSX
 > beta-endorphin
 6tub
-> medin
+> crystal-protein-cry1ac
 6vps
 8yac
+> nup98
+8ci8
 > insulin
 8sbd
-8rvt
-> he30-polymorph
+> ninjurin-1
 9k8s
 9k8t
-> dimer-of-dimer
+> custom-peptides
 6nzn
 7xm8
-> anp-natriuretic
+> atrial-natriuretic-peptide
 9rbd
 9rbw
-> tgf-beta
+> rip1-rip3-necrosome
+8ib0
+> tgf-beta-1
 8hia
 > max1-peptide
 2N1E
-> antimicrobial-peptides
+> insulin
+8rvt
+> temporin-b
 7qv5
+> temporin-l
 7qv6
+> uperin-3.6
 9hgb
 9hgl
 9hgt
@@ -828,5 +860,8 @@
 9hid
 > catalytic-amyloids
 9r7e
+> amyloid-beta
+8gz8
+8gz9
 > ly12-peptide
 9qfm
