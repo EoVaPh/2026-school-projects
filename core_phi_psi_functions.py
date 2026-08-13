@@ -357,6 +357,8 @@ def plot_scatter(data, positions, ylabel, title, filename):
             negative_x,
             negative,
             color="#496acf",
+            alpha=0.8,
+            edgecolors='none',
             s=20
         )
 
@@ -373,6 +375,8 @@ def plot_scatter(data, positions, ylabel, title, filename):
             positive_x,
             positive,
             color="#58C35D",
+            alpha=0.8,
+            edgecolors='none',
             s=20
         )
 
@@ -389,6 +393,8 @@ def plot_scatter(data, positions, ylabel, title, filename):
             zero_x,
             zero,
             color="black",
+            alpha=0.8,
+            edgecolors='none',
             s=20
         )
 
