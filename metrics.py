@@ -22,6 +22,8 @@ matplotlib.rcParams['mathtext.fontset'] = 'stix'
 matplotlib.rc('font', family='STIXGeneral')
 matplotlib.rc('font', weight='ultralight')
 
+from scipy import stats
+
 
 def get_plane_basis(points_1: list, points_2: list, paired_indices: list):
     if paired_indices is None:
@@ -372,7 +374,7 @@ def get_window_lddt(seq_1_aligned, seq_2_aligned, points_1, points_2, window_siz
             obj.hetero = np.array([False] * len(frame_points_1))
 
         lddt_scores = lddt(reference=id1_obj, subject=id2_obj, exclude_same_residue=False)
-        global_lddt = np.mean(lddt_scores)
+        global_lddt = 1 - np.mean(lddt_scores)
 
         results[frame_name] = global_lddt
 
@@ -499,7 +501,7 @@ def draw_aligned_records(records_file_path_1: str, color_1: str, name_1: str,
     paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
 
     print('I want to call LDDT.')
-    results = get_window_rmsd(seq_1_aligned, seq_2_aligned, points_1, points_2, WINDOW_SIZE)
+    results = get_window_lddt(seq_1_aligned, seq_2_aligned, points_1, points_2, WINDOW_SIZE)
 
     print("\nRMSD для рамок:")
 
@@ -575,7 +577,7 @@ for family in families[1:]:
 
     all_mean_idr = []
     all_rmsd = []
-    WINDOW_SIZE = 10
+    WINDOW_SIZE = 6
     OUTPUT_FILE = Path('figures/' + str(family_number) + '.png')
 
     for name_1, name_2 in combinations(structure_names, 2):
@@ -616,7 +618,7 @@ for family in families[1:]:
 
         paired_indices = get_aligned_indices(seq_1_aligned, seq_2_aligned)
 
-        results = get_window_rmsd(seq_1_aligned, seq_2_aligned,
+        results = get_window_lddt(seq_1_aligned, seq_2_aligned,
                                   points_1, points_2, WINDOW_SIZE)
 
         mean_idr_values, rmsd_values = plot_rmsd_vs_mean_idr(results,
@@ -632,8 +634,14 @@ for family in families[1:]:
         all_rmsd,
         s=40,
         alpha=0.1,
-        color='#005f73',
+        color='#415a77'#'#bc4749'
     )
+
+    slope, intercept, r_value, p_value, std_err = stats.linregress(all_mean_idr,
+                                                                   all_rmsd)
+
+    arange = np.arange(min(all_mean_idr), max(all_mean_idr), 10**(-3))
+    plot.plot(arange, arange * slope + intercept, color='#1b263b')#'#540b0e')
 
 #plot.hist2d(all_mean_idr, all_rmsd, bins=30, cmap='Blues')
 
@@ -653,10 +661,11 @@ for family in families[1:]:
 # 3. Plot
 #plot.bar(bin_edges[:-1], y_means, width=np.diff(bin_edges), align='edge', edgecolor='black', color='#669bbc')
 
-    plot.xlabel("Mean IDR")
-    plot.ylabel("RMSD")
+    plot.xlabel("Mean IDR", fontsize=16)
+    plot.ylabel("1 – LDDT", fontsize=16)
     plot.title(
-        f"LDDT vs Mean IDR, window size = {WINDOW_SIZE}"
+        f"(1 – LDDT) vs Mean IDR, window size = {WINDOW_SIZE}, r = {round(r_value,3)}",
+        fontsize=16
     )
 
     plot.tight_layout()
