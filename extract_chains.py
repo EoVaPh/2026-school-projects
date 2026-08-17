@@ -12,6 +12,20 @@ def _safe_chain_id(chain_id):
     return display, safe
 
 
+def _residue_number_string(residue):
+    """
+    Return the residue number as a string, combining the sequence
+    identifier and insertion code if present.
+    """
+    # residue.id is (hetero_flag, sequence_identifier, insertion_code)
+    _, seq_id, ins_code = residue.id
+
+    base = str(seq_id)
+    if ins_code and ins_code.strip():
+        return base + ins_code.strip()
+    return base
+
+
 def extract_longest_chain_to_files(input_dir, output_dir):
     """
     Process all PDB/mmCIF structures in input_dir.
@@ -27,7 +41,8 @@ def extract_longest_chain_to_files(input_dir, output_dir):
     Output line format:
       x y z chain_id res_num
 
-    res_num is the 1-based sequential position of the residue in the chain.
+    res_num is the residue number from the ATOM section of the structure file
+    (sequence identifier + insertion code if present).
     """
     warnings.simplefilter("ignore", BiopythonWarning)
 
@@ -68,9 +83,11 @@ def extract_longest_chain_to_files(input_dir, output_dir):
 
         best_chain = None
         best_ca_atoms = []
+        best_res_nums = []  # store residue number strings
 
         for chain in model:
             ca_atoms = []
+            res_nums = []
 
             for residue in chain:
                 if "CA" not in residue:
@@ -86,10 +103,12 @@ def extract_longest_chain_to_files(input_dir, output_dir):
                     pass
 
                 ca_atoms.append(ca)
+                res_nums.append(_residue_number_string(residue))
 
             if len(ca_atoms) > len(best_ca_atoms):
                 best_chain = chain
                 best_ca_atoms = ca_atoms
+                best_res_nums = res_nums
 
         if best_chain is None or not best_ca_atoms:
             print(f"Skipping {filename}: no CA atoms found")
@@ -101,10 +120,11 @@ def extract_longest_chain_to_files(input_dir, output_dir):
         out_path = os.path.join(output_dir, out_filename)
 
         with open(out_path, "w") as out_f:
-            for idx, ca in enumerate(best_ca_atoms, start=1):
+            for ca, res_num in zip(best_ca_atoms, best_res_nums):
                 x, y, z = ca.coord
-                out_f.write(f"{x:.3f} {y:.3f} {z:.3f} {chain_id_display} {idx}\n")
+                out_f.write(f"{x:.3f} {y:.3f} {z:.3f} {chain_id_display} {res_num}\n")
 
         print(f"Wrote {out_filename} ({len(best_ca_atoms)} CA atoms)")
+
 
 extract_longest_chain_to_files("amyloid_structures", "extracted_chains")
