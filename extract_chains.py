@@ -3,6 +3,11 @@ import re
 import warnings
 from Bio import BiopythonWarning
 from Bio.PDB import PDBParser, MMCIFParser
+from Bio.SeqUtils import seq1
+from Bio.SeqIO.PdbIO import PdbSeqresIterator, CifSeqresIterator
+from Bio import SeqIO
+from Bio.Data import PDBData
+from Bio.PDB import MMCIF2Dict
 
 
 def _safe_chain_id(chain_id):
@@ -24,6 +29,122 @@ def _residue_number_string(residue):
     if ins_code and ins_code.strip():
         return base + ins_code.strip()
     return base
+
+
+import os
+from Bio import SeqIO
+from Bio.Data import PDBData
+from Bio.PDB import MMCIF2Dict
+
+
+def get_seqres(path, chain_id):
+    """
+    Return the SEQRES sequence for the specified chain from a PDB or mmCIF file.
+
+    Parameters
+    ----------
+    path : str
+        Path to structure file (.pdb, .ent, .cif, .mmcif)
+    chain_id : str
+        Chain identifier as found in the structure file (e.g. 'A', 'B',
+        auth_asym_id or label_asym_id for mmCIF).
+
+    Returns
+    -------
+    str or None
+        One-letter amino acid sequence of the chain, or None if not found.
+    """
+    ext = os.path.splitext(path)[1].lower()
+
+    if ext in (".pdb", ".ent"):
+        return _get_seqres_pdb(path, chain_id)
+    elif ext in (".cif", ".mmcif", ".mcif"):
+        return _get_seqres_mmcif(path, chain_id)
+    else:
+        raise ValueError(f"Unsupported file extension: {ext}")
+
+
+def _get_seqres_pdb(path, chain_id):
+    """Extract SEQRES from a PDB file using Biopython's pdb-seqres parser."""
+    try:
+        records = SeqIO.parse(path, "pdb-seqres")
+    except Exception:
+        return None
+
+    for rec in records:
+        # Biopython usually stores chain ID in annotations, or as "pdbid:chain" in id
+        chain = rec.annotations.get("chain")
+        if chain is None:
+            # Try to extract from the record id (e.g., '1abc:A' or '1abc_A')
+            if ":" in rec.id:
+                chain = rec.id.split(":")[1]
+            elif "_" in rec.id:
+                chain = rec.id.split("_")[-1]
+
+        if chain == chain_id:
+            return str(rec.seq)
+
+    return None
+
+
+def _get_seqres_mmcif(path, chain_id):
+    """Extract SEQRES from an mmCIF file using the entity_poly_seq table."""
+    try:
+        cif = MMCIF2Dict(path)
+    except Exception:
+        return None
+
+    # Map chain identifier (auth or label) to entity ID
+    asym_ids = cif.get("_struct_asym.id")
+    auth_ids = cif.get("_struct_asym.pdbx_strand_id")
+    entity_ids = cif.get("_struct_asym.entity_id")
+
+    entity_id = None
+
+    # Try label_asym_id first
+    if asym_ids and entity_ids:
+        for aid, eid in zip(asym_ids, entity_ids):
+            if aid == chain_id:
+                entity_id = eid
+                break
+
+    # Fall back to auth_asym_id
+    if entity_id is None and auth_ids and entity_ids:
+        for aid, eid in zip(auth_ids, entity_ids):
+            if aid == chain_id:
+                entity_id = eid
+                break
+
+    if entity_id is None:
+        return None
+
+    # Prefer one-letter sequence if provided
+    one_letter_seq = cif.get("_entity_poly.pdbx_seq_one_letter_code")
+    entity_poly_ids = cif.get("_entity_poly.entity_id")
+
+    if one_letter_seq and entity_poly_ids:
+        for eid, seq in zip(entity_poly_ids, one_letter_seq):
+            if eid == entity_id:
+                return seq.replace("\n", "").replace(" ", "")
+
+    # Otherwise build from three-letter monomer codes
+    poly_entity_ids = cif.get("_entity_poly_seq.entity_id")
+    mon_ids = cif.get("_entity_poly_seq.mon_id")
+
+    if not poly_entity_ids or not mon_ids:
+        return None
+
+    three_letter_list = [
+        mon.upper() for eid, mon in zip(poly_entity_ids, mon_ids)
+        if eid == entity_id
+    ]
+
+    aa_map = PDBData.protein_letters_3to1
+    one_letter_list = [
+        aa_map.get(aa3, "X") for aa3 in three_letter_list
+    ]
+
+    return "".join(one_letter_list)
 
 
 def extract_longest_chain_to_files(input_dir, output_dir):
@@ -84,10 +205,12 @@ def extract_longest_chain_to_files(input_dir, output_dir):
         best_chain = None
         best_ca_atoms = []
         best_res_nums = []  # store residue number strings
+        best_res_names = []
 
         for chain in model:
             ca_atoms = []
             res_nums = []
+            res_names = []
 
             for residue in chain:
                 if "CA" not in residue:
@@ -104,11 +227,13 @@ def extract_longest_chain_to_files(input_dir, output_dir):
 
                 ca_atoms.append(ca)
                 res_nums.append(_residue_number_string(residue))
+                res_names.append(seq1(residue.get_resname()))
 
             if len(ca_atoms) > len(best_ca_atoms):
                 best_chain = chain
                 best_ca_atoms = ca_atoms
                 best_res_nums = res_nums
+                best_res_names = res_names
 
         if best_chain is None or not best_ca_atoms:
             print(f"Skipping {filename}: no CA atoms found")
@@ -116,15 +241,28 @@ def extract_longest_chain_to_files(input_dir, output_dir):
 
         chain_id_display, chain_id_safe = _safe_chain_id(best_chain.id)
 
-        out_filename = f"{stem}_{ext_lower.lstrip('.')}_{chain_id_safe}.txt"
+        #out_filename = f"{stem}_{ext_lower.lstrip('.')}_{chain_id_safe}.txt"
+        out_filename = f"{stem}.txt"
         out_path = os.path.join(output_dir, out_filename)
 
         with open(out_path, "w") as out_f:
-            for ca, res_num in zip(best_ca_atoms, best_res_nums):
+            for ca, res_num, res_name in zip(best_ca_atoms, best_res_nums, best_res_names):
                 x, y, z = ca.coord
-                out_f.write(f"{x:.3f} {y:.3f} {z:.3f} {chain_id_display} {res_num}\n")
+                out_f.write(f"{x:.3f} {y:.3f} {z:.3f} {chain_id_display} {res_num} {res_name}\n")
 
         print(f"Wrote {out_filename} ({len(best_ca_atoms)} CA atoms)")
+
+        try:
+            seq = get_seqres(path, chain_id_display)
+
+            #seq_filename = f"{stem}_{ext_lower.lstrip('.')}_{chain_id_safe}_seq.txt"
+            seq_filename = f"{stem}_seq.txt"
+            seq_path = os.path.join(output_dir, seq_filename)
+            seq_file = open(seq_path, 'w')
+            seq_file.write(seq)
+            seq_file.close()
+        except:
+            print("Can not extract sequence of structure " + str(path) + ".")
 
 
 extract_longest_chain_to_files("amyloid_structures", "extracted_chains")
