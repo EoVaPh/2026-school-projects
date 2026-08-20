@@ -33,6 +33,7 @@ def align_seqs(seq_1: str, seq_2: str) -> tuple:
 
     aligner = PairwiseAligner(open_gap_score = -2,
                               extend_gap_score = -1,
+                              left_gap_score = -1,
                               right_gap_score = -1)
     alignment = aligner.align(seq_1, seq_2)[0]
     return alignment[0], alignment[1]
