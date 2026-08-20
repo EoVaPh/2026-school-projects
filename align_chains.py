@@ -31,8 +31,8 @@ def read_chain(chain_file_path: str) -> str:
 def align_seqs(seq_1: str, seq_2: str) -> tuple:
     '''Do global pairwise alignment of two amino acid sequences.'''
 
-    aligner = PairwiseAligner(open_gap_score = -2,
-                              extend_gap_score = -1,
+    aligner = PairwiseAligner(open_gap_score = -3,
+                              extend_gap_score = -2,
                               left_gap_score = -1,
                               right_gap_score = -1)
     alignment = aligner.align(seq_1, seq_2)[0]
@@ -188,7 +188,7 @@ def get_len_longest_shared_region(aligned_chain_1: str,
     return len_longest_shared_region
 
 
-pdbid_1 = '9k23'
+pdbid_1 = '7nrs'
 
 pdb_ids = [f.name[:4] for f in Path('extracted_chains').rglob('*') if f.is_file() and '.txt' in f.name]
 
