@@ -87,64 +87,12 @@ def _get_seqres_pdb(path, chain_id):
     return None
 
 
-def _get_seqres_mmcif(path, chain_id):
+def _get_seqres_mmcif(path: str, chain_id: str):
     """Extract SEQRES from an mmCIF file using the entity_poly_seq table."""
-    try:
-        cif = MMCIF2Dict(path)
-    except Exception:
-        return None
 
-    # Map chain identifier (auth or label) to entity ID
-    asym_ids = cif.get("_struct_asym.id")
-    auth_ids = cif.get("_struct_asym.pdbx_strand_id")
-    entity_ids = cif.get("_struct_asym.entity_id")
-
-    entity_id = None
-
-    # Try label_asym_id first
-    if asym_ids and entity_ids:
-        for aid, eid in zip(asym_ids, entity_ids):
-            if aid == chain_id:
-                entity_id = eid
-                break
-
-    # Fall back to auth_asym_id
-    if entity_id is None and auth_ids and entity_ids:
-        for aid, eid in zip(auth_ids, entity_ids):
-            if aid == chain_id:
-                entity_id = eid
-                break
-
-    if entity_id is None:
-        return None
-
-    # Prefer one-letter sequence if provided
-    one_letter_seq = cif.get("_entity_poly.pdbx_seq_one_letter_code")
-    entity_poly_ids = cif.get("_entity_poly.entity_id")
-
-    if one_letter_seq and entity_poly_ids:
-        for eid, seq in zip(entity_poly_ids, one_letter_seq):
-            if eid == entity_id:
-                return seq.replace("\n", "").replace(" ", "")
-
-    # Otherwise build from three-letter monomer codes
-    poly_entity_ids = cif.get("_entity_poly_seq.entity_id")
-    mon_ids = cif.get("_entity_poly_seq.mon_id")
-
-    if not poly_entity_ids or not mon_ids:
-        return None
-
-    three_letter_list = [
-        mon.upper() for eid, mon in zip(poly_entity_ids, mon_ids)
-        if eid == entity_id
-    ]
-
-    aa_map = PDBData.protein_letters_3to1
-    one_letter_list = [
-        aa_map.get(aa3, "X") for aa3 in three_letter_list
-    ]
-
-    return "".join(one_letter_list)
+    for record in SeqIO.parse(path, "cif-seqres"):
+        if record.annotations.get("chain") == chain_id:
+            return str(record.seq)
 
 
 def extract_longest_chain_to_files(input_dir, output_dir):
@@ -170,7 +118,7 @@ def extract_longest_chain_to_files(input_dir, output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     pdb_parser = PDBParser(QUIET=True)
-    cif_parser = MMCIFParser(QUIET=True)
+    cif_parser = MMCIFParser(QUIET=True, auth_chains=False)
 
     pdb_exts = {".pdb", ".ent"}
     cif_exts = {".cif", ".mmcif", ".mcif"}
@@ -252,17 +200,17 @@ def extract_longest_chain_to_files(input_dir, output_dir):
 
         print(f"Wrote {out_filename} ({len(best_ca_atoms)} CA atoms)")
 
-        try:
-            seq = get_seqres(path, chain_id_display)
+        #try:
+        seq = get_seqres(path, chain_id_display)
 
             #seq_filename = f"{stem}_{ext_lower.lstrip('.')}_{chain_id_safe}_seq.txt"
-            seq_filename = f"{stem}_seq.txt"
-            seq_path = os.path.join(output_dir, seq_filename)
-            seq_file = open(seq_path, 'w')
-            seq_file.write(seq)
-            seq_file.close()
-        except:
-            print("Can not extract sequence of structure " + str(path) + ".")
+        seq_filename = f"{stem}_seq.txt"
+        seq_path = os.path.join(output_dir, seq_filename)
+        seq_file = open(seq_path, 'w')
+        seq_file.write(seq)
+        seq_file.close()
+        #except:
+        #    print("Can not extract sequence of structure " + str(path) + ".")
 
 
-extract_longest_chain_to_files("amyloid_structures", "extracted_chains")
+extract_longest_chain_to_files("CIFs", "extracted_chains")
