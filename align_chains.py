@@ -188,9 +188,11 @@ def get_len_longest_shared_region(aligned_chain_1: str,
     return len_longest_shared_region
 
 
-pdbid_1 = '8kew'
+pdbid_1 = '9k23'
 
 pdb_ids = [f.name[:4] for f in Path('extracted_chains').rglob('*') if f.is_file() and '.txt' in f.name]
+
+verbose = False
 
 for pdbid_2 in pdb_ids:
     results = process_pair(pdbid_1, pdbid_2)
@@ -208,28 +210,30 @@ for pdbid_2 in pdb_ids:
         aligned_chain_1, aligned_chain_2
     )
 
-    if len_longest_shared_region >= 6:
+    if len_longest_shared_region >= 7:
         print(f'{pdbid_1} / {pdbid_2}')
 
-        #print("SEQRES alignment")
-        #print()
-        #print(results['seqres_alignment'][0])
-        #print(results['seqres_alignment'][1])
-        #print()
+        if verbose:
+            print("SEQRES alignment")
+            print()
+            print(results['seqres_alignment'][0])
+            print(results['seqres_alignment'][1])
+            print()
 
-        #print("CHAIN 1 -> SEQRES 1")
-        #print()
-        #print(results['chain_1'][0])
-        #print(results['chain_1'][1])
-        #print()
+            print("CHAIN 1 -> SEQRES 1")
+            print()
+            print(results['chain_1'][0])
+            print(results['chain_1'][1])
+            print()
 
-        #print("CHAIN 2 -> SEQRES 2")
-        #print()
-        #print(results['chain_2'][0])
-        #print(results['chain_2'][1])
-        #print()
+            print("CHAIN 2 -> SEQRES 2")
+            print()
+            print(results['chain_2'][0])
+            print(results['chain_2'][1])
+            print()
 
-        print("FINAL CHAIN ALIGNMENT")
+            print("FINAL CHAIN ALIGNMENT")
+
         print()
         print(aligned_chain_1)
         print(aligned_chain_2)
