@@ -222,6 +222,20 @@ def get_positions(pdbid: str) -> list:
     return positions
 
 
+def num_substitutions(seq_1: str, seq_2: str) -> int:
+    assert len(seq_1) == len(seq_2)
+
+    N = len(seq_1)
+
+    count = 0
+
+    for n in range(N):
+        if seq_1[n] != seq_2[n]:
+            count += 1
+
+    return count
+
+
 def get_shared_regions(w: int, aligned_chain_1: str, aligned_chain_2: str,
                                positions_1: list, positions_2: list) -> tuple:
     '''Find all shared continuous regions of the same length and return their
@@ -255,10 +269,11 @@ def get_shared_regions(w: int, aligned_chain_1: str, aligned_chain_2: str,
                 break
 
         if len(region_sequence_1) == w:
-            aa_regions_1.append(region_sequence_1)
-            pos_regions_1.append(region_positions_1)
-            aa_regions_2.append(region_sequence_2)
-            pos_regions_2.append(region_positions_2)
+            if num_substitutions(region_sequence_1, region_sequence_2) <= 1:
+                aa_regions_1.append(region_sequence_1)
+                pos_regions_1.append(region_positions_1)
+                aa_regions_2.append(region_sequence_2)
+                pos_regions_2.append(region_positions_2)
 
     return aa_regions_1, pos_regions_1, aa_regions_2, pos_regions_2
 
@@ -412,15 +427,16 @@ def select_atomseq_idr(seqres_aligned: str, chain_aligned: str, aiupred_values: 
     return IDR
 
 
-pdb_ids = [f.name[:4] for f in Path('extracted_chains').rglob('*') if f.is_file() and '.txt' in f.name]
-
+pdb_ids = [f.name[:4] for f in Path('extracted_chains').rglob('*') \
+           if f.is_file() and '.txt' in f.name]
 
 verbose = False
 
 rmsd_length_6, lddt_length_6, idr_length_6 = [], [], []
 
-for pdbid_1 in ['8kew', '8a7p', '6nzn', '6y1a', '9j0l', '8ci8', '8efu', '9xbp',
-                '8ons', '7nrs', '8qxb']:#pdb_ids:
+pdb_id = '8pkg'
+
+for pdbid_1 in [pdb_id]:#pdb_ids:
     for pdbid_2 in pdb_ids:
         results = process_pair(pdbid_1, pdbid_2)
 
@@ -514,12 +530,12 @@ for pdbid_1 in ['8kew', '8a7p', '6nzn', '6y1a', '9j0l', '8ci8', '8efu', '9xbp',
             #num_residues_2 = len(aligned_chain_2) - aligned_chain_2.count('-')
 
 
-plot.scatter(idr_length_6, rmsd_length_6, color='#a53860', alpha=0.1)
+plot.scatter(idr_length_6, lddt_length_6, color='#a53860', alpha=0.1)
 plot.xticks(fontsize=12)
 plot.yticks(fontsize=12)
 plot.xlabel('IDR', fontsize=16)
-plot.ylabel('RMSD', fontsize=16)
-#plot.title('Alpha-synuclein screened using window of length 6', fontsize=16)
-plot.title('Amyloid-beta screened using window of length 6', fontsize=16)
+#plot.ylabel('RMSD', fontsize=16)
+plot.ylabel('1 – LDDT', fontsize=16)
+plot.title(pdb_id + ' family screened using window of length 6', fontsize=16)
 plot.tight_layout()
 plot.savefig('idr_lddt.png')
