@@ -270,18 +270,22 @@ def calc_squared_distance(pos_1: tuple, pos_2: tuple) -> float:
 
 
 def calc_rmsd(positions_1: list, positions_2: list) -> float:
-    assert len(positions_1) == len(positions_1)
+    '''Calculate RMSD of two lists of points.'''
 
-    p1 = np.array(positions_1)
-    p2 = np.array(positions_2)
+    assert len(positions_1) == len(positions_2)
 
-    centroid1 = np.mean(p1, axis=0)
-    centroid2 = np.mean(p2, axis=0)
+    positions_1_array = np.array(positions_1)
+    positions_2_array = np.array(positions_2)
 
-    p1_centered = p1 - centroid1
-    p2_centered = p2 - centroid2
+    centroid_1 = np.mean(positions_1_array, axis=0)
+    centroid_2 = np.mean(positions_2_array, axis=0)
 
-    rotation, rmsd_value = Rotation.align_vectors(p1_centered, p2_centered)
+    positions_1_centered = positions_1_array - centroid_1
+    positions_2_centered = positions_2_array - centroid_2
+
+    rotation, rmsd_value = Rotation.align_vectors(
+        positions_1_centered, positions_2_centered
+    )
 
     return rmsd_value
 
@@ -290,10 +294,10 @@ def calc_lddt(
     reference: List[Tuple[float, float, float]],
     model: List[Tuple[float, float, float]],
     inclusion_radius: float = 15.0,
-    thresholds: Sequence[float] = (0.5, 1.0, 2.0, 4.0),
+    thresholds: Sequence[float] = (0.5, 1.0, 2.0, 4.0)
 ) -> float:
     """
-    Calculate the local Distance Difference Test (lDDT) score between two
+    Calculate the Local Distance Difference Test (LDDT) score between two
     structures represented as lists of corresponding 3D coordinates.
 
     Parameters
@@ -305,12 +309,12 @@ def calc_lddt(
     inclusion_radius : float
         Include reference pairs whose distance is <= this value.
     thresholds : sequence of floats
-        Distance-difference thresholds used by lDDT.
+        Distance-difference thresholds used by LDDT.
 
     Returns
     -------
     float
-        The lDDT score.
+        The LDDT score.
     """
     if len(reference) != len(model):
         raise ValueError("reference and model must have the same length")
@@ -319,7 +323,8 @@ def calc_lddt(
     if not thresholds:
         raise ValueError("thresholds must not be empty")
 
-    def distance(a: Tuple[float, float, float], b: Tuple[float, float, float]) -> float:
+    def distance(a: Tuple[float, float, float],
+                 b: Tuple[float, float, float]) -> float:
         return math.sqrt(
             (a[0] - b[0]) ** 2
             + (a[1] - b[1]) ** 2
@@ -414,7 +419,8 @@ verbose = False
 
 rmsd_length_6, lddt_length_6, idr_length_6 = [], [], []
 
-for pdbid_1 in ['2lmn']:#pdb_ids:
+for pdbid_1 in ['8kew', '8a7p', '6nzn', '6y1a', '9j0l', '8ci8', '8efu', '9xbp',
+                '8ons', '7nrs', '8qxb']:#pdb_ids:
     for pdbid_2 in pdb_ids:
         results = process_pair(pdbid_1, pdbid_2)
 
@@ -464,7 +470,7 @@ for pdbid_1 in ['2lmn']:#pdb_ids:
                     aligned_chain_1, aligned_chain_2,
                     positions_1, positions_2
                 )
-            
+
             seqres_idr_1 = calculate_seqres_idr(pdbid_1, 'extracted_chains')
             seqres_idr_2 = calculate_seqres_idr(pdbid_2, 'extracted_chains')
 
@@ -508,11 +514,11 @@ for pdbid_1 in ['2lmn']:#pdb_ids:
             #num_residues_2 = len(aligned_chain_2) - aligned_chain_2.count('-')
 
 
-plot.scatter(idr_length_6, lddt_length_6, color='#a53860', alpha=0.5)
+plot.scatter(idr_length_6, rmsd_length_6, color='#a53860', alpha=0.1)
 plot.xticks(fontsize=12)
 plot.yticks(fontsize=12)
 plot.xlabel('IDR', fontsize=16)
-plot.ylabel('1 – LDDT', fontsize=16)
+plot.ylabel('RMSD', fontsize=16)
 #plot.title('Alpha-synuclein screened using window of length 6', fontsize=16)
 plot.title('Amyloid-beta screened using window of length 6', fontsize=16)
 plot.tight_layout()
