@@ -9,6 +9,8 @@ from aiupred import AIUPred
 import math
 from typing import List, Tuple, Sequence
 
+from scipy.stats import linregress
+
 from matplotlib import pyplot as plot
 import matplotlib
 
@@ -452,7 +454,7 @@ verbose = False
 
 rmsd_length_6, lddt_length_6, idr_length_6 = [], [], []
 
-pdb_id = '8owe'
+pdb_id = '9k23'
 
 for pdbid_1 in [pdb_id]:#pdb_ids:
     for pdbid_2 in pdb_ids:
@@ -548,6 +550,10 @@ for pdbid_1 in [pdb_id]:#pdb_ids:
             #num_residues_1 = len(aligned_chain_1) - aligned_chain_1.count('-')
             #num_residues_2 = len(aligned_chain_2) - aligned_chain_2.count('-')
 
+# Linear regression.
+slope, intercept, r, p, se = linregress(idr_length_6, lddt_length_6)
+idr_range = np.arange(min(idr_length_6), max(idr_length_6), 0.01)
+plot.plot(idr_range, intercept + slope * idr_range, color='#450920')
 
 plot.scatter(idr_length_6, lddt_length_6, color='#a53860', alpha=0.1)
 plot.xticks(fontsize=12)
