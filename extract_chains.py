@@ -74,11 +74,7 @@ def _get_seqres_mmcif(path: str, chain_id: str):
     sequence = []
     seen_positions = set()
 
-    for asym_id, seq_id, mon_id in zip(
-        asym_ids,
-        seq_ids,
-        mon_ids
-    ):
+    for asym_id, seq_id, mon_id in zip(asym_ids, seq_ids, mon_ids):
         if asym_id != chain_id:
             continue
 
