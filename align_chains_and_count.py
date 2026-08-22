@@ -4,8 +4,6 @@ from scipy.spatial.transform import Rotation
 
 from Bio.Align import PairwiseAligner
 
-from aiupred import AIUPred
-
 import math
 from typing import List, Tuple, Sequence
 
@@ -390,24 +388,20 @@ def calc_lddt(
     return total_score / considered_points
 
 
-predictor = AIUPred()
+def read_seqres_idr(pdb_id: str, idr_file: str) -> list:
+    '''Read pre-calculated IDR propensities for a PDB ID from a file.'''
 
-def calculate_seqres_idr(pdb_id: str, folder: str) -> list:
-    '''Find a SEQRES file by PDB ID, calculate AIUPred disorder
-    propensities, and return them as a list.'''
+    with open(idr_file, 'r') as file:
+        lines = file.readlines()
 
-    folder = Path(folder)
-    file_path = folder / f'{pdb_id}_seq.txt'
+    for i, line in enumerate(lines):
+        if line.strip() == f'>{pdb_id}':
+            if i + 1 >= len(lines):
+                raise ValueError(f'No IDR values found for {pdb_id}')
 
-    if not file_path.exists():
-        raise FileNotFoundError(f'File not found: {file_path}')
+            return [float(x) for x in lines[i + 1].split()]
 
-    with open(file_path, 'r') as file:
-        sequence = file.read().strip()
-
-    disorder_propensities = predictor.predict_disorder(sequence)
-
-    return disorder_propensities.tolist()
+    raise ValueError(f'IDR values not found for {pdb_id}')
 
 
 def select_atomseq_idr(seqres_aligned: str, chain_aligned: str, aiupred_values: list) -> list:
@@ -508,8 +502,8 @@ for pdbid_1 in [pdb_id]:#pdb_ids:
                     positions_1, positions_2
                 )
 
-            seqres_idr_1 = calculate_seqres_idr(pdbid_1, 'extracted_chains')
-            seqres_idr_2 = calculate_seqres_idr(pdbid_2, 'extracted_chains')
+            seqres_idr_1 = read_seqres_idr(pdbid_1, 'idrs.txt')
+            seqres_idr_2 = read_seqres_idr(pdbid_2, 'idrs.txt')
 
             chain_idr_1 = select_atomseq_idr(
                 results['chain_1'][0],
