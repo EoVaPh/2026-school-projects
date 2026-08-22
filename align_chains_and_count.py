@@ -450,8 +450,19 @@ rmsd_length_6, lddt_length_6, idr_length_6 = [], [], []
 
 pdb_id = '8pkg'
 
-for pdbid_1 in [pdb_id]:#pdb_ids:
+# amyloid beta 42 (incomplete family)
+pdb_ids = ['8kew', '8ol7', '9wap', '8kf3', '9fh1', '9jb0', '5kk3', '21fb',
+           '2nao', '9obk', '9jb2', '2beg', '5oqv', '7q4b', '8kf1', '9co4',
+           '9ck6', '8sej', '8eze', '8bfb', '9czn', '8olq', '5aef', '9fh3',
+           '8azs', '8ol5', '8kf4', '9jb1', '9k0e', '8olo', '2mxu', '9k0d',
+           '7f29', '8ezd', '8otf', '8ol2', '9jaz', '7q4m', '8bfz', '9cki',
+           '8ol6', '8olg', '9fh5', '8azt', '8kf6', '9czp', '8kf5', '9wao',
+           '9fh4', '8bfa', '9k0f', '8ol3', '8oln', '9fh2']
+
+for pdbid_1 in pdb_ids:
     for pdbid_2 in pdb_ids:
+        if pdbid_1 >= pdbid_2: continue
+
         results = process_pair(pdbid_1, pdbid_2)
 
         aligned_chain_1, aligned_chain_2 = strip_alignment(
@@ -559,6 +570,6 @@ plot.yticks(fontsize=12)
 plot.xlabel('IDR', fontsize=16)
 #plot.ylabel('RMSD', fontsize=16)
 plot.ylabel('1 – LDDT', fontsize=16)
-plot.title(pdb_id + ' family screened using window of length 6', fontsize=16)
+plot.title('amyloid beta 42 family screened using window of length 6', fontsize=16)
 plot.tight_layout()
 plot.savefig('idr_lddt.png')
