@@ -6,6 +6,11 @@ from scipy.spatial.transform import Rotation
 from Bio.Align import PairwiseAligner
 
 
+input_folder = Path('extracted_chains')
+families_file = Path('amyloid_explorer_families.txt')
+output_file = Path('rmsds.txt')
+
+
 def read_seq(seq_file_path: str) -> str:
     '''Read a SEQRES sequence from a text file.'''
 
@@ -50,6 +55,42 @@ def get_positions(pdbid: str) -> list:
         ))
 
     return positions
+
+
+def read_families(file_path: Path) -> dict:
+    '''Read families from a file of the form:
+
+    >Family name
+    pdbid1
+    pdbid2
+    pdbid3
+
+    >Another family
+    pdbid4
+    ...'''
+    
+    families = {}
+    current_family = None
+
+    with open(file_path, 'r', encoding='utf-8') as file:
+
+        for line in file:
+            line = line.strip()
+
+            if not line:
+                continue
+
+            if line.startswith('>'):
+                current_family = line[1:].strip()
+                families[current_family] = []
+
+            elif current_family is not None:
+                pdbid = line.lower()
+
+                if pdbid not in families[current_family]:
+                    families[current_family].append(pdbid)
+
+    return families
 
 
 def align_seqs(seq_1: str, seq_2: str) -> tuple:
@@ -122,56 +163,34 @@ def project_chain_to_common_alignment(chain: str, chain_to_seqres: dict, seqres_
     return result
 
 
-def process_pair(pdbid_1: str, pdbid_2: str) -> dict:
-    '''Process one pair of structures:
+def process_pair(pdbid_1: str, pdbid_2: str, sequences: dict, chains: dict) -> dict:
+    '''Process one pair of structures.
     1. Align two SEQRES sequences.
     2. Map each SEQRES to the common alignment.
     3. Map each chain to its SEQRES.
     4. Project both chains onto the common SEQRES alignment.'''
 
-    seq_1 = read_seq('extracted_chains/' + pdbid_1 + '_seq.txt')
-    seq_2 = read_seq('extracted_chains/' + pdbid_2 + '_seq.txt')
+    seq_1 = sequences[pdbid_1]
+    seq_2 = sequences[pdbid_2]
 
-    chain_1 = read_chain('extracted_chains/' + pdbid_1 + '.txt')
-    chain_2 = read_chain('extracted_chains/' + pdbid_2 + '.txt')
+    chain_1 = chains[pdbid_1]
+    chain_2 = chains[pdbid_2]
 
     aligned_seqres_1, aligned_seqres_2 = align_seqs(seq_1, seq_2)
 
-    seqres_1_to_common = mapping_seqres_to_common_alignment(aligned_seqres_1)
-    seqres_2_to_common = mapping_seqres_to_common_alignment(aligned_seqres_2)
+    seqres_1_to_common = (mapping_seqres_to_common_alignment(aligned_seqres_1))
+    seqres_2_to_common = (mapping_seqres_to_common_alignment(aligned_seqres_2))
+
     common_alignment_length = len(aligned_seqres_1)
 
     chain_1_seqres_alignment, chain_1_chain_alignment, chain_1_to_seqres = mapping_chain_to_seqres(seq_1, chain_1)
     chain_2_seqres_alignment, chain_2_chain_alignment, chain_2_to_seqres = mapping_chain_to_seqres(seq_2, chain_2)
 
-    projected_chain_1 = project_chain_to_common_alignment(chain_1, chain_1_to_seqres, seqres_1_to_common, common_alignment_length)
+    projected_chain_1 = project_chain_to_common_alignment(chain_1, chain_1_to_seqres,seqres_1_to_common,common_alignment_length)
     projected_chain_2 = project_chain_to_common_alignment(chain_2, chain_2_to_seqres, seqres_2_to_common, common_alignment_length)
 
-
-    return {
-        'seqres_alignment': (
-            aligned_seqres_1,
-            aligned_seqres_2
-        ),
-
-        'chain_1': (
-            chain_1_seqres_alignment,
-            chain_1_chain_alignment
-        ),
-
-        'chain_2': (
-            chain_2_seqres_alignment,
-            chain_2_chain_alignment
-        ),
-
-        'chain_alignment': (
-            projected_chain_1,
-            projected_chain_2
-        ),
-
-        'chain_1_to_seqres': chain_1_to_seqres,
-        'chain_2_to_seqres': chain_2_to_seqres
-    }
+    return {'chain_alignment': (projected_chain_1,
+                                projected_chain_2)}
 
 
 def strip_alignment(alignment_1, alignment_2) -> tuple:
@@ -300,72 +319,138 @@ def calc_rmsd(positions_1: list, positions_2: list) -> float:
     return rmsd_value
 
 
-input_folder = Path('extracted_chains')
-output_file = Path('rmsds.txt')
+def main():
 
-pdb_ids = sorted(f.name[:-8] for f in input_folder.glob('*_seq.txt') if f.is_file())
-print(f'Found {len(pdb_ids)} structures.')
+    print('Reading families...')
+    families = read_families(families_file)
+    print(f'Found {len(families)} families.')
 
-pairs = list(combinations(pdb_ids, 2))
-print(f'Total unique pairs: {len(pairs)}')
+    valid_families = {}
 
-with open(output_file, 'w') as output:
+    for family_name, pdb_ids in families.items():
+        valid_pdb_ids = []
+        for pdbid in pdb_ids:
+            seq_file = input_folder / f'{pdbid}_seq.txt'
+            chain_file = input_folder / f'{pdbid}.txt'
 
-    for pair_number, (pdbid_1, pdbid_2) in enumerate(pairs, start=1):
+            if seq_file.exists() and chain_file.exists():
+                valid_pdb_ids.append(pdbid)
+            else:
+                print(f'WARNING: files not found for {pdbid}')
+
+        if len(valid_pdb_ids) >= 2:
+            valid_families[family_name] = valid_pdb_ids
+
+    total_pairs = sum(len(list(combinations(pdb_ids, 2))) for pdb_ids in valid_families.values())
+    print(
+        f'Families with at least two structures: '
+        f'{len(valid_families)}'
+    )
+
+    print(f'Total unique pairs: {total_pairs}')
+
+    # Cache sequences, chains and coordinates.
+    # This avoids reading the same files repeatedly.
+    print('Reading structure files...')
+
+    all_pdb_ids = sorted({pdbid for pdb_ids in valid_families.values() for pdbid in pdb_ids})
+
+    sequences = {}
+    chains = {}
+    positions = {}
+
+    for number, pdbid in enumerate(all_pdb_ids, start=1):
+
+        sequences[pdbid] = read_seq(input_folder / f'{pdbid}_seq.txt')
+        chains[pdbid] = read_chain(input_folder / f'{pdbid}.txt')
+        positions[pdbid] = get_positions(pdbid)
 
         print(
-            f'[{pair_number}/{len(pairs)}] '
-            f'{pdbid_1} / {pdbid_2}'
+            f'Loaded [{number}/{len(all_pdb_ids)}] '
+            f'{pdbid}'
         )
 
-        try:
-            results = process_pair(pdbid_1, pdbid_2)
+    # Calculate RMSD values.
+    processed_pairs = 0
+    successful_pairs = 0
 
-            aligned_chain_1, aligned_chain_2 = strip_alignment(
-                results['chain_alignment'][0], results['chain_alignment'][1]
+    with open(output_file, 'w', encoding='utf-8') as output:
+        for family_name, pdb_ids in valid_families.items():
+            print()
+            print(
+                f'Processing family: {family_name} '
+                f'({len(pdb_ids)} structures)'
             )
 
-            len_longest_shared_region = get_len_longest_shared_region(
-                aligned_chain_1, aligned_chain_2
-            )
+            output.write(f'>{family_name}\n')
 
-            if len_longest_shared_region >= 7:
+            for pdbid_1, pdbid_2 in combinations(pdb_ids, 2):
 
-                positions_1 = get_positions(pdbid_1)
-                positions_2 = get_positions(pdbid_2)
+                processed_pairs += 1
+                print(
+                    f'[{processed_pairs}/{total_pairs}] '
+                    f'{family_name}: '
+                    f'{pdbid_1} / {pdbid_2}'
+                )
 
-                aa_regions_1, pos_regions_1, aa_regions_2, pos_regions_2 = \
-                    get_shared_regions(
-                        6,
-                        aligned_chain_1, aligned_chain_2,
-                        positions_1, positions_2
-                    )
+                try:
 
-                rmsd_length_6 = []
+                    results = process_pair(pdbid_1, pdbid_2, sequences, chains)
 
-                for r in range(len(pos_regions_1)):
-                    rmsd_length_6.append(
-                        calc_rmsd(pos_regions_1[r], pos_regions_2[r])
-                    )
+                    aligned_chain_1, aligned_chain_2 = (strip_alignment(results['chain_alignment'][0],
+                                                                        results['chain_alignment'][1]))
 
-                if rmsd_length_6:
+                    longest_shared_region = (get_len_longest_shared_region(aligned_chain_1, aligned_chain_2))
+
+                    if longest_shared_region < 7:
+                        continue
+
+                    aa_regions_1, pos_regions_1, aa_regions_2, pos_regions_2 = get_shared_regions(6,
+                                                                                                    aligned_chain_1,
+                                                                                                    aligned_chain_2,
+                                                                                                    positions[pdbid_1],
+                                                                                                    positions[pdbid_2])
+
+                    rmsd_values = []
+
+                    for region_number in range(len(pos_regions_1)):
+                        rmsd = calc_rmsd(pos_regions_1[region_number], pos_regions_2[region_number])
+                        rmsd_values.append(rmsd)
+
+                    if not rmsd_values:
+                        continue
+
+                    successful_pairs += 1
 
                     output.write(
-                        f'>{pdbid_1}_{pdbid_2}\n'
+                        f'{pdbid_1}_{pdbid_2}\n'
                     )
 
                     output.write(
                         ' '.join(
                             f'{value:.3f}'
-                            for value in rmsd_length_6
+                            for value in rmsd_values
                         )
                         + '\n'
                     )
 
-        except Exception as e:
-            print(f'ERROR: {pdbid_1} / {pdbid_2}: {e}')
+                except Exception as e:
+
+                    print(
+                        f'ERROR: '
+                        f'{family_name}: '
+                        f'{pdbid_1} / {pdbid_2}: '
+                        f'{e}'
+                    )
+
+            output.write('\n')
+
+    print()
+    print('Finished.')
+    print(f'Total pairs processed: {processed_pairs}')
+    print(f'Pairs with RMSD results: {successful_pairs}')
+    print(f'Results saved to: {output_file}')
 
 
-print()
-print('Finished.')
-print(f'Results saved to: {output_file}')
+if __name__ == '__main__':
+    main()
