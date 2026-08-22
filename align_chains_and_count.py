@@ -428,17 +428,34 @@ def select_atomseq_idr(seqres_aligned: str, chain_aligned: str, aiupred_values: 
     return IDR
 
 
+def find_mismatches(aligned_chain_1: str, aligned_chain_2: str) -> str:
+    assert len(aligned_chain_1) == len(aligned_chain_2)
+
+    N = len(aligned_chain_1)
+
+    mismatches = ''
+
+    for n in range(N):
+        if aligned_chain_1[n] != '-' and aligned_chain_2[n] != '-' and \
+           aligned_chain_1[n] != aligned_chain_2[n]:
+                mismatches += '*'
+        else:
+            mismatches += ' '
+
+    return mismatches
+
+
 pdb_ids = [f.name[:4] for f in Path('extracted_chains').rglob('*') \
            if f.is_file() and '.txt' in f.name]
 
-verbose = True
+verbose = False
 
 rmsd_length_6, lddt_length_6, idr_length_6 = [], [], []
 
 pdb_id = '8pkg'
 
 for pdbid_1 in [pdb_id]:#pdb_ids:
-    for pdbid_2 in ['8e7i']:#pdb_ids:
+    for pdbid_2 in pdb_ids:
         results = process_pair(pdbid_1, pdbid_2)
 
         aligned_chain_1, aligned_chain_2 = strip_alignment(
@@ -476,6 +493,7 @@ for pdbid_1 in [pdb_id]:#pdb_ids:
             print()
             print(aligned_chain_1)
             print(aligned_chain_2)
+            print(find_mismatches(aligned_chain_1, aligned_chain_2))
             print()
 
             positions_1 = get_positions(pdbid_1)
