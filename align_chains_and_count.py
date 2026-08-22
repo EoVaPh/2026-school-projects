@@ -454,7 +454,7 @@ verbose = False
 
 rmsd_length_6, lddt_length_6, idr_length_6 = [], [], []
 
-pdb_id = '9k23'
+pdb_id = '8pkg'
 
 for pdbid_1 in [pdb_id]:#pdb_ids:
     for pdbid_2 in pdb_ids:
@@ -534,6 +534,10 @@ for pdbid_1 in [pdb_id]:#pdb_ids:
                 lddt_length_6.append(
                     1 - calc_lddt(pos_regions_1[r], pos_regions_2[r])
                 )
+
+                if lddt_length_6[-1] > 0.5:
+                    print('ALERT')
+                    print(aa_regions_1[r], aa_regions_2[r])
 
                 window_pair_idr = []
 
