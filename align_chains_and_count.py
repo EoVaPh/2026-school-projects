@@ -49,6 +49,7 @@ def align_seqs(seq_1: str, seq_2: str) -> tuple:
 
     aligner = PairwiseAligner(open_gap_score = -3,
                               extend_gap_score = -2,
+                              mismatch_score = -1,
                               left_gap_score = -1,
                               right_gap_score = -1)
     alignment = aligner.align(seq_1, seq_2)[0]
@@ -249,7 +250,7 @@ def get_shared_regions(w: int, aligned_chain_1: str, aligned_chain_2: str,
 
     aa_regions_1, pos_regions_1, aa_regions_2, pos_regions_2 = [], [], [], []
 
-    for i in range(N - w + 1):
+    for i in range(6, N - w + 1 - 6):
         if aligned_chain_1[i] != '-':
             i_1 += 1
 
@@ -430,14 +431,14 @@ def select_atomseq_idr(seqres_aligned: str, chain_aligned: str, aiupred_values: 
 pdb_ids = [f.name[:4] for f in Path('extracted_chains').rglob('*') \
            if f.is_file() and '.txt' in f.name]
 
-verbose = False
+verbose = True
 
 rmsd_length_6, lddt_length_6, idr_length_6 = [], [], []
 
 pdb_id = '8pkg'
 
 for pdbid_1 in [pdb_id]:#pdb_ids:
-    for pdbid_2 in pdb_ids:
+    for pdbid_2 in ['8e7i']:#pdb_ids:
         results = process_pair(pdbid_1, pdbid_2)
 
         aligned_chain_1, aligned_chain_2 = strip_alignment(
