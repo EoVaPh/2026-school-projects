@@ -270,7 +270,7 @@ def get_shared_regions(w: int, aligned_chain_1: str, aligned_chain_2: str,
                 break
 
         if len(region_sequence_1) == w:
-            if num_substitutions(region_sequence_1, region_sequence_2) <= 1:
+            if num_substitutions(region_sequence_1, region_sequence_2) <= 0:
                 aa_regions_1.append(region_sequence_1)
                 pos_regions_1.append(region_positions_1)
                 aa_regions_2.append(region_sequence_2)
@@ -452,7 +452,7 @@ verbose = False
 
 rmsd_length_6, lddt_length_6, idr_length_6 = [], [], []
 
-pdb_id = '8pkg'
+pdb_id = '8owe'
 
 for pdbid_1 in [pdb_id]:#pdb_ids:
     for pdbid_2 in pdb_ids:
